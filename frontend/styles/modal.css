@@ -20,6 +20,7 @@
     width: 400px;
     max-width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
   }
   
   h2 {
@@ -43,16 +44,17 @@
     width: 100%;
     padding: 12px;
     border-radius: 5px;
-    background-color: #4CAF50;
+    background: linear-gradient(to right, #160d94, #10105e);
     color: white;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
     transition: background-color 0.3s ease;
   }
   
   button:hover {
-    background-color: #45a049;
+    background: linear-gradient(to right, #10105e, #160d94);
   }
   
   button:focus {

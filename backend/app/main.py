@@ -1,16 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+#main.py
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from . import models, schemas, services, db
 from fastapi_jwt_auth import AuthJWT
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
-import os
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi import Request
-
-# Determina se está rodando em ambiente de produção ou desenvolvimento
-IS_PRODUCTION = os.getenv("ENV") == "production"
+import os
 
 # Configuração JWT
 class Settings(BaseModel):
@@ -86,7 +84,14 @@ async def register(user: schemas.UserCreate, db: Session = Depends(db.get_db), a
 
     # Configura o token como um cookie HttpOnly
     response = JSONResponse({"message": "Usuário criado com sucesso"})
-    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="Strict", max_age=timedelta(minutes=30))
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        samesite="Lax",
+        secure=True,
+        max_age=1800 # 30 minutos
+    )
     
     return response
 
@@ -101,22 +106,87 @@ def login(user: schemas.UserLogin, db: Session = Depends(db.get_db), Authorize: 
     # Gera o token JWT com informações do usuário
     access_token = Authorize.create_access_token(subject=db_user.username, expires_time=timedelta(minutes=30))
 
-    # Configura o token como um cookie HttpOnly apenas em produção
+    # Configura o token como um cookie HttpOnly
     response = JSONResponse({"message": "Login successful"})
     response.set_cookie(
         key="access_token",
         value=access_token,
-        httponly=IS_PRODUCTION, 
+        httponly=True, 
         samesite="Lax", 
-        max_age=1800, # Time for expiration in seconds
-        secure=IS_PRODUCTION, 
-        domain="localhost" if not IS_PRODUCTION else None
+        secure=True, 
+        max_age=1800  # 30 minutos
     )
 
     return response
+
+# Pasta para armazenar uploads
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Rota para upload de arquivo
+@app.post("/upload/")
+async def upload_file(file: UploadFile = File(...)):
+    try:
+        # Salvando o arquivo localmente
+        file_location = os.path.join(UPLOAD_FOLDER, file.filename)
+        print(f"Salvando o arquivo em: {file_location}")  # Log para verificar o caminho
+
+        # Salvando o conteúdo do arquivo no diretório de uploads
+        with open(file_location, "wb") as buffer:
+            buffer.write(await file.read())
+
+        return {"message": "Arquivo enviado com sucesso", "file": file.filename}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    
+# Rota para listar arquivos do usuário autenticado
+@app.get("/files/")
+def list_files():
+    try:
+        # Verificar se o diretório de uploads existe
+        if not os.path.exists(UPLOAD_FOLDER):
+            raise HTTPException(status_code=404, detail="Pasta de uploads não encontrada.")
+
+        # Listar todos os arquivos na pasta de uploads
+        files = os.listdir(UPLOAD_FOLDER)
+
+        # Filtrar apenas os arquivos (ignorando subdiretórios)
+        files = [file for file in files if os.path.isfile(os.path.join(UPLOAD_FOLDER, file))]
+
+        if not files:
+            raise HTTPException(status_code=404, detail="Nenhum arquivo encontrado.")
+
+        # Retornar os arquivos com o nome
+        return [{"filename": file} for file in files]
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+
+# Rota para download de arquivo
+@app.get("/download/{filename}")
+def download_file(filename: str):
+    try:
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        print(f"Verificando o arquivo em: {file_path}")  # Debug
+
+        if not os.path.isfile(file_path):
+            raise HTTPException(status_code=404, detail="Arquivo não encontrado")
+
+        response = FileResponse(file_path, filename=filename)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # Rota para logout (limpa o cookie)
 @app.post("/logout/")
 def logout(response: JSONResponse):
     response.delete_cookie("access_token")
     return {"message": "Logout successful"}
+
+
+

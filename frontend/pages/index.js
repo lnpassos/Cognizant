@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 
 Modal.setAppElement("#__next");
 
 export default function Home() {
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(true);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -16,10 +16,10 @@ export default function Home() {
       const response = await axios.post("http://localhost:8000/login/", {
         username,
         password,
-      }, { withCredentials: true }); // Envia cookies com a requisição
+      }, { withCredentials: true });
 
       alert(response.data.message);
-      window.location.href = "/home"; // Redireciona para a página de "Bem-vindo"
+      window.location.href = "/home"; // Redireciona para a página principal
     } catch (error) {
       alert(error.response?.data?.detail || "Login failed");
     }
@@ -27,7 +27,7 @@ export default function Home() {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/register/", {
+      await axios.post("http://localhost:8000/register/", {
         username,
         email,
         password,
@@ -35,7 +35,7 @@ export default function Home() {
 
       alert("Conta criada com sucesso!");
       setRegisterModalOpen(false);
-      window.location.href = "/home"; // Redireciona após criar conta
+      setLoginModalOpen(true);
     } catch (error) {
       alert(error.response?.data?.detail || "Falha ao criar conta!");
     }
@@ -43,18 +43,17 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Home</h1>
-      <button onClick={() => setLoginModalOpen(true)}>Login</button>
-      <button onClick={() => setRegisterModalOpen(true)}>Criar conta</button>
+      <h1>Cognizant</h1>
 
       {/* Modal Login */}
       <Modal
         isOpen={isLoginModalOpen}
-        onRequestClose={() => setLoginModalOpen(false)}
+        shouldCloseOnOverlayClick={false}
+        shouldCloseOnEsc={false}
         className="react-modal-content"
         overlayClassName="react-modal-overlay"
       >
-        <h2>Login</h2>
+        <h2>Cognizant</h2>
         <input
           type="text"
           placeholder="Username"
@@ -68,18 +67,16 @@ export default function Home() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={handleLogin}>Login</button>
-        <button
-          onClick={() => setLoginModalOpen(false)}
-          className="close"
-        >
-          Close
+        <button onClick={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }}>
+          Criar conta
         </button>
       </Modal>
 
       {/* Modal Register */}
       <Modal
         isOpen={isRegisterModalOpen}
-        onRequestClose={() => setRegisterModalOpen(false)}
+        shouldCloseOnOverlayClick={false}
+        shouldCloseOnEsc={false}
         className="react-modal-content"
         overlayClassName="react-modal-overlay"
       >
@@ -103,11 +100,8 @@ export default function Home() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={handleRegister}>Criar conta</button>
-        <button
-          onClick={() => setRegisterModalOpen(false)}
-          className="close"
-        >
-          Close
+        <button onClick={() => { setRegisterModalOpen(false); setLoginModalOpen(true); }}>
+          Voltar para Login
         </button>
       </Modal>
     </div>
