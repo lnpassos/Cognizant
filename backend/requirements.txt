@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+sqlalchemy
+databases
+pydantic==1.10.7
+passlib[bcrypt]
