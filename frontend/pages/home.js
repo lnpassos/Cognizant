@@ -1,67 +1,103 @@
-// pages/home.js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 function HomePage() {
   const [folderName, setFolderName] = useState('');
+  const [file, setFile] = useState(null);
   const [folders, setFolders] = useState([]);
+  const [error, setError] = useState(null); // Adicionado para exibir mensagens de erro
+  const router = useRouter(); 
 
-  // Buscar pastas ao carregar a página
   useEffect(() => {
-    const fetchFolders = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/folders/', {
-          method: 'GET',
-          credentials: 'include', // Garantir que o cookie de autenticação seja enviado
-        });
+    fetchFolders(); 
+  }, []);
 
-        if (response.ok) {
-          const data = await response.json();
-          setFolders(data); // Armazenar as pastas retornadas
-        } else {
-          alert('Erro ao carregar pastas.');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar pastas:', error);
-      }
-    };
+  const fetchFolders = async () => {
+  try {
+    // Verifique primeiro se o usuário tem um token válido
+    const homeResponse = await fetch('http://localhost:8000/home/', {
+      method: 'GET',
+      credentials: 'include', // Inclui o cookie com o token
+    });
 
-    fetchFolders();
-  }, []); // Esse efeito roda uma vez quando a página é carregada
+    if (homeResponse.status === 401) {
+      // Se o token for inválido ou expirado, redireciona para a página de sessão expirada
+      router.push("/session-expired");  // Redireciona para a página "Sessão Expirada"
+      return;
+    }
 
-  // Função para criar uma nova pasta
+    // Caso o token seja válido, faz a requisição para buscar as pastas
+    const response = await fetch('http://localhost:8000/folders/', {
+      method: 'GET',
+      credentials: 'include', // Inclui o cookie com o token
+    });
+
+    if (response.status === 400) {
+      // Caso o erro seja relacionado a folders não encontradas ou sem permissão
+      setError('Não há pastas disponíveis ou você não tem permissão para acessar.');
+      return;
+    }
+
+    if (response.ok) {
+      const data = await response.json();
+      setFolders(data); // Atualiza a lista de pastas
+    }
+    
+  } catch (error) {
+    setError('Erro ao buscar pastas. Tente novamente mais tarde.');
+  }
+};
+
+
   const handleFolderCreate = async () => {
     if (!folderName) {
-      alert('Por favor, insira um nome para a pasta');
+      setError('Por favor, insira um nome para a pasta');
       return;
+    }
+
+    const formData = new FormData();
+    formData.append('folder_path', folderName); 
+    if (file) {
+      formData.append('file', file);
     }
 
     const response = await fetch('http://localhost:8000/create_folder/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ folder_name: folderName }),
-      credentials: 'include', // Inclui o cookie com o token
+      body: formData,
+      credentials: 'include',
     });
 
+    if (response.status === 401) {
+      setError('Token expirado, por favor faça login novamente.');
+      router.push('/'); // Redireciona para a raiz
+      return;
+    }
+
     if (response.ok) {
+      setError(null); // Limpa erro em caso de sucesso
       alert('Pasta criada com sucesso!');
-      setFolderName(''); // Limpa o campo de input
-      // Atualiza a lista de pastas
-      const newFolder = { name: folderName };
-      setFolders((prevFolders) => [...prevFolders, newFolder]);
+      setFolderName('');
+      setFile(null);
+      fetchFolders(); 
     } else {
-      alert('Erro ao criar pasta.');
+      const errorData = await response.json();
+      setError(errorData.detail || 'Erro desconhecido');
     }
   };
 
   return (
     <div>
       <h1>Crie uma nova pasta</h1>
+      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Exibe erro, se houver */}
       <input
         type="text"
         value={folderName}
         onChange={(e) => setFolderName(e.target.value)}
         placeholder="Nome da pasta"
+      />
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
       />
       <button onClick={handleFolderCreate}>Criar Pasta</button>
 
@@ -69,8 +105,8 @@ function HomePage() {
       {folders.length > 0 ? (
         <ul>
           {folders.map((folder) => (
-            <li key={folder.name}>
-              <a href={`folders/${folder.name}`}>{folder.name}</a>
+            <li key={folder.id}>
+              <a href={`/folders/${folder.path}`}>{folder.path}</a>
             </li>
           ))}
         </ul>

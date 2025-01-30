@@ -35,3 +35,18 @@
   button {
     border: none;
   }
+
+
+  /* styles/globals.css */
+.session-expired-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: red;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  z-index: 1000;
+}

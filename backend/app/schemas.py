@@ -34,7 +34,7 @@ class UserLogin(BaseModel):
 
 # Esquema para criação de pasta
 class FolderCreate(BaseModel):
-    folder_name: str
+    folder_path: str  # Agora usamos `folder_path` para suportar subpastas
 
     class Config:
         orm_mode = True

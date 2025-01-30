@@ -33,8 +33,8 @@ class Folder(Base):
     __tablename__ = "folders"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True, nullable=False)
+    path = Column(String, unique=True, nullable=False)  # Agora armazenamos o caminho completo
     user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="folders")
-    files = relationship("File", back_populates="folder", lazy="dynamic")  # Usando back_populates aqui
+    files = relationship("File", back_populates="folder")
