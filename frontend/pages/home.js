@@ -1,149 +1,84 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+// pages/home.js
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-export default function Home() {
-  const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
-  const [file, setFile] = useState(null);
-  const [files, setFiles] = useState([]);
+function HomePage() {
+  const [folderName, setFolderName] = useState('');
+  const [folders, setFolders] = useState([]);
 
+  // Buscar pastas ao carregar a página
   useEffect(() => {
-    // Buscar informações do usuário
-    axios
-      .get("http://localhost:8000/home/", { withCredentials: true })
-      .then((response) => {
-        setUsername(response.data.message);
-      })
-      .catch(() => {
-        setError("Sessão expirada. Faça login novamente.");
-        setTimeout(() => (window.location.href = "/"), 2000); 
-      });
-  
-    // Buscar arquivos do usuário
-    axios
-      .get("http://localhost:8000/files/", { withCredentials: true })
-      .then((response) => {
-        setFiles(response.data);
-      })
-      .catch(() => {
-        console.error("Não foi possível carregar os arquivos."); // Agora só loga o erro
-      });
-  }, []);
-  
+    const fetchFolders = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/folders/', {
+          method: 'GET',
+          credentials: 'include', // Garantir que o cookie de autenticação seja enviado
+        });
 
-  const handleLogout = () => {
-    axios
-      .post("http://localhost:8000/logout/", {}, { withCredentials: true })
-      .then(() => {
-        window.location.href = "/"; // Redireciona para login
-      });
-  };
+        if (response.ok) {
+          const data = await response.json();
+          setFolders(data); // Armazenar as pastas retornadas
+        } else {
+          alert('Erro ao carregar pastas.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar pastas:', error);
+      }
+    };
 
-  const handleFileUpload = async () => {
-    if (!file) {
-      alert("Por favor, selecione um arquivo.");
+    fetchFolders();
+  }, []); // Esse efeito roda uma vez quando a página é carregada
+
+  // Função para criar uma nova pasta
+  const handleFolderCreate = async () => {
+    if (!folderName) {
+      alert('Por favor, insira um nome para a pasta');
       return;
     }
-  
-    setError(""); // Limpa mensagens de erro antigas
-  
-    const formData = new FormData();
-    formData.append("file", file);
-  
-    try {
-      // Fazendo o upload do arquivo
-      const uploadResponse = await axios.post("http://localhost:8000/upload/", formData, {
-        withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      // Logando a resposta do upload
-      console.log("Upload Response:", uploadResponse.data);
-  
-      setFile(null);
-  
-      // Atualiza automaticamente a lista de arquivos
-      fetchFiles(); 
-  
-    } catch (error) {
-      console.error("Upload Error:", error.response ? error.response.data : error);
+
+    const response = await fetch('http://localhost:8000/create_folder/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folder_name: folderName }),
+      credentials: 'include', // Inclui o cookie com o token
+    });
+
+    if (response.ok) {
+      alert('Pasta criada com sucesso!');
+      setFolderName(''); // Limpa o campo de input
+      // Atualiza a lista de pastas
+      const newFolder = { name: folderName };
+      setFolders((prevFolders) => [...prevFolders, newFolder]);
+    } else {
+      alert('Erro ao criar pasta.');
     }
   };
-  
-  const fetchFiles = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/files/", { withCredentials: true });
-  
-      // Verificar se os arquivos foram retornados
-      console.log("Arquivos retornados:", response.data);
-  
-      if (response.data && Array.isArray(response.data)) {
-        setFiles(response.data); // Atualiza os arquivos
-      } 
-    } 
-      catch (error) {
-      console.error("Erro ao listar arquivos:", error);
-      setError("Erro ao carregar arquivos.");
-    }
-  };
-  
-
-  const handleDownload = (filename) => {
-    
-    const downloadUrl = `http://localhost:8000/download/${encodeURIComponent(filename)}`;
-    
-    axios
-      .get(downloadUrl, { responseType: "blob" })
-      .then((response) => {
-        console.log("Download realizado com sucesso:", filename); // Debug
-  
-        const fileURL = URL.createObjectURL(response.data);
-        const link = document.createElement("a");
-        link.href = fileURL;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      })
-      .catch((error) => {
-        console.error("Erro ao fazer download do arquivo:", error); // Debug
-        setError("Erro ao fazer download do arquivo.");
-      });
-  };
-
 
   return (
     <div>
-      {error ? (
-        <h1>{error}</h1>
+      <h1>Crie uma nova pasta</h1>
+      <input
+        type="text"
+        value={folderName}
+        onChange={(e) => setFolderName(e.target.value)}
+        placeholder="Nome da pasta"
+      />
+      <button onClick={handleFolderCreate}>Criar Pasta</button>
+
+      <h2>Minhas Pastas</h2>
+      {folders.length > 0 ? (
+        <ul>
+          {folders.map((folder) => (
+            <li key={folder.name}>
+              <a href={`folders/${folder.name}`}>{folder.name}</a>
+            </li>
+          ))}
+        </ul>
       ) : (
-        <>
-          <h1>{username}</h1>
-          <button onClick={handleLogout}>Logout</button>
-
-          <h2>Upload de Arquivo</h2>
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-            accept="*/*" // Aceita todos os tipos de arquivo
-          />
-          <button onClick={handleFileUpload}>Upload</button>
-
-          <h2>Arquivos Enviados</h2>
-          {files.length === 0 ? (
-            <p>Nenhum arquivo enviado ainda.</p>
-          ) : (
-            <ul>
-              {files.map((file, index) => (
-                <li key={index}>
-                  {file.filename}{" "}
-                  <button onClick={() => handleDownload(file.filename)}>Download</button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
+        <p>Você ainda não tem pastas.</p>
       )}
     </div>
   );
 }
+
+export default HomePage;

@@ -4,13 +4,14 @@
 * {
     margin: 0;
     padding: 0;
+    color: rgb(56, 59, 221);
     box-sizing: border-box;
   }
   
   /* Corpo da aplicação */
   body {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background: linear-gradient(135deg, #0a0649 50%, #ffffff 50%);
+    background: linear-gradient(135deg, #1b1b1b 50%, #1b1b1b 50%);
     background-size: cover;  
     background-position: center;  
     background-repeat: no-repeat; 
@@ -27,7 +28,7 @@
   h1 {
     text-align: center;
     font-size: 2rem;
-    color: #db0505;
+    color: #ffffff;
   }
   
   /* Botões principais */

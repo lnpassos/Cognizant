@@ -31,3 +31,19 @@ class UserLogin(BaseModel):
 
     class Config:
         orm_mode = True
+
+# Esquema para criação de pasta
+class FolderCreate(BaseModel):
+    folder_name: str
+
+    class Config:
+        orm_mode = True
+
+# Esquema para resposta ao buscar pastas
+class FolderResponse(BaseModel):
+    id: int
+    name: str
+    user_id: int
+
+    class Config:
+        orm_mode = True
