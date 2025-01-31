@@ -20,6 +20,24 @@ export async function uploadFile(folderName, file) {
   }
 }
 
+
+export const deleteFile = async (folderPath, fileName) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8000/folders/${encodeURIComponent(folderPath)}/files/${encodeURIComponent(fileName)}`,
+      {
+        method: "DELETE",
+        credentials: "include", // Inclui o cookie com o token
+      }
+    );
+    return response;
+  } catch (error) {
+    throw new Error("Erro ao deletar arquivo");
+  }
+};
+
+
+
 export async function downloadFile(folderName, fileName) {
   try {
     const response = await fetch(`http://localhost:8000/download/${folderName}/${fileName}`, {

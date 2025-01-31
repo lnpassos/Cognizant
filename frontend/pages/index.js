@@ -13,7 +13,7 @@ export default function Home() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/users/login/", {
+      const response = await axios.post("http://localhost:8000/login/", {
         username,
         password,
       }, { withCredentials: true });
@@ -27,7 +27,7 @@ export default function Home() {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:8000/users/register/", {
+      await axios.post("http://localhost:8000/register/", {
         username,
         email,
         password,

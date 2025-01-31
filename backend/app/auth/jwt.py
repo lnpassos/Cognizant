@@ -5,7 +5,7 @@ from fastapi import Request
 
 SECRET_KEY = "kj45k4jhg51g5jfh4f85gh1g5j1hj5fgh4gd4h" # Include a secure key here (using .pem file for example)
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Tempo de expiração do token
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

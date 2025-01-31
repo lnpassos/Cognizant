@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { uploadFile, downloadFile } from "../api/folder"; // Funções de upload e download
+import { uploadFile, downloadFile, deleteFile } from "../api/folder"; // Função de deleteFile adicionada
 
 function FolderPage() {
   const router = useRouter();
@@ -49,17 +49,23 @@ function FolderPage() {
 
   // Função para fazer o upload do arquivo
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file || !folderPath) return;
-
+    const files = event.target.files; // Pega todos os arquivos selecionados
+    if (!files.length || !folderPath) return;
+  
     try {
-      const data = await uploadFile(folderPath, file);
-      if (data) {
-        fetchFiles(); // Atualiza a lista de arquivos após o upload
-      }
+      const uploadPromises = Array.from(files).map(async (file) => {
+        return uploadFile(folderPath, file); // Faz upload de cada arquivo individualmente
+      });
+  
+      await Promise.all(uploadPromises); // Espera todos os uploads terminarem
+  
+      await fetchFiles(); // Atualiza a lista de arquivos após o upload
     } catch (error) {
       console.error("Erro no upload:", error);
     }
+  
+    // Reseta o input para permitir selecionar os mesmos arquivos novamente
+    event.target.value = "";
   };
 
   // Função para fazer o download do arquivo
@@ -67,6 +73,32 @@ function FolderPage() {
     if (!folderPath) return;
     downloadFile(folderPath, fileName);
   };
+
+  // Função para deletar o arquivo
+  const handleFileDelete = async (fileName) => {
+    if (!folderPath || !fileName) return;
+  
+    try {
+      // Formata a URL corretamente
+      const response = await fetch(
+        `http://localhost:8000/delete_file/${encodeURIComponent(folderPath)}/${encodeURIComponent(fileName)}`,
+        {
+          method: "DELETE",
+          credentials: "include", // Inclui o cookie com o token
+        }
+      );
+  
+      if (response.ok) {
+        fetchFiles(); // Atualiza a lista de arquivos após a exclusão
+      } else {
+        const errorData = await response.json();
+        alert(errorData.detail || "Erro ao deletar arquivo");
+      }
+    } catch (error) {
+      console.error("Erro ao deletar arquivo:", error);
+    }
+  };
+  
 
   return (
     <div>
@@ -76,6 +108,7 @@ function FolderPage() {
         type="file"
         ref={fileInputRef}
         style={{ display: "none" }}
+        multiple
         onChange={handleFileUpload}
       />
       <button onClick={() => fileInputRef.current.click()}>📤 Fazer Upload</button>
@@ -89,6 +122,9 @@ function FolderPage() {
               {file.filename}
               <button onClick={() => handleFileDownload(file.filename)}>
                 Baixar
+              </button>
+              <button onClick={() => handleFileDelete(file.filename)} style={{ marginLeft: '10px' }}>
+                Deletar
               </button>
             </li>
           ))}

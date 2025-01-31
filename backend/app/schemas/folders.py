@@ -15,7 +15,6 @@ class FileResponse(FileCreate):
     class Config:
         orm_mode = True
 
-
 # Esquema para criação de pasta
 class FolderCreate(BaseModel):
     folder_path: str  # Agora usamos `folder_path` para suportar subpastas

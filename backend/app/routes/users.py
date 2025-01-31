@@ -34,7 +34,7 @@ async def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         httponly=True,
         samesite="Lax",
         secure=True,
-        max_age=30 * 60  # 30 minutos
+        max_age=30 * 60  
     )
     
     return response
@@ -56,7 +56,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
         httponly=True, 
         samesite="Lax", 
         secure=True,
-        max_age=30 * 60  # 30 minutos
+        max_age=30 * 60 
     )
 
     return response
