@@ -13,13 +13,13 @@ export default function Home() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/login/", {
+      const response = await axios.post("http://localhost:8000/users/login/", {
         username,
         password,
       }, { withCredentials: true });
 
       alert(response.data.message);
-      window.location.href = "/home"; // Redireciona para a página principal
+      window.location.href = "/home"; 
     } catch (error) {
       alert(error.response?.data?.detail || "Login failed");
     }
@@ -27,7 +27,7 @@ export default function Home() {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:8000/register/", {
+      await axios.post("http://localhost:8000/users/register/", {
         username,
         email,
         password,

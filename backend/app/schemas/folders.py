@@ -1,16 +1,12 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-# Esquema base para arquivos
-class FileBase(BaseModel):
+# Esquema para upload de arquivos
+class FileCreate(BaseModel):
     filename: str
 
-# Esquema para upload de arquivos
-class FileCreate(FileBase):
-    pass
-
 # Esquema para resposta ao buscar arquivos
-class FileResponse(FileBase):
+class FileResponse(FileCreate):
     id: int
     file_path: str
     uploaded_at: datetime
@@ -19,18 +15,6 @@ class FileResponse(FileBase):
     class Config:
         orm_mode = True
 
-# Schemas de usuário (mantendo os já definidos)
-class UserCreate(BaseModel):
-    username: str
-    email: str
-    password: str
-
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-    class Config:
-        orm_mode = True
 
 # Esquema para criação de pasta
 class FolderCreate(BaseModel):
