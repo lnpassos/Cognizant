@@ -1,0 +1,88 @@
+/* HOME MODULE */
+
+/* Mantém a estrutura principal sem afetar o Header */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Mantém a seção de criação de pastas centralizada sem afetar o Header */
+.folderSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Seção superior (Criação de Pasta) */
+.topSection {
+  padding: 20px;
+  border-bottom: 2px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  align-self: center; /* Apenas essa seção fica centralizada */
+}
+
+/* Input e Upload centralizados */
+.inputField {
+  margin: 10px 0;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #0078d7;
+}
+
+/* Mantém os elementos do upload organizados verticalmente */
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botão ajustado para centralização */
+.button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+  text-align: center;
+  transition: background-color 0.5s;
+}
+
+.button:hover {
+  background-color: #005a9e;
+}
+
+/* Seção inferior (Lista de Pastas) */
+.bottomSection {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Subtítulo centralizado */
+.subtitle {
+  margin-bottom: 10px;
+  color: #005a9e;
+  text-align: center;
+}

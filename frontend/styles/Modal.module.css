@@ -1,0 +1,106 @@
+/* styles/modal.css */
+
+.react-modal {
+  background: linear-gradient(135deg, #ffffff 50%, #f7f7f7 50%);
+  background-size: cover;  
+  background-position: center;  
+  background-repeat: no-repeat; 
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.react-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(233, 228, 228, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.react-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 50px 30px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.modal-img {
+  width: 100%;
+  max-width: 200px;  
+  margin: 0 auto 20px; 
+  display: block;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #160d94
+}
+
+/* Inputs */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Estilos do botão */
+.button-primary {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #2f78c4, #5d5deb);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+  background: linear-gradient(to right, #5d5deb, #2f78c4);
+}
+
+/* Estilos do botão */
+.button-secondary {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 2px solid #2f78c4;
+  background: white;
+  color: #2f78c4;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s ease;
+}
+
+.button-secondary:hover {
+  color: #1a5da5;
+  border: 2px solid #1a5da5;
+}
+
+
+.input-field:focus {
+  outline: none;
+}
+

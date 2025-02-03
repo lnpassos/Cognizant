@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Header from "../components/Header";
+import FolderItem from "../components/FolderItem";
+import CustomFileInput from "../components/UploadFile"; 
+import styles from '../styles/Home.module.css'; 
 
 function HomePage() {
   const [folderName, setFolderName] = useState('');
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
   const [error, setError] = useState(null);
-  const [fileInputKey, setFileInputKey] = useState(Date.now()); // Força recriação do input
   const router = useRouter();
 
+  let resetFileInput = () => {}; // Variável para armazenar a função de reset
+
+  // Carregar pastas ao carregar a página
   useEffect(() => {
     fetchFolders();
   }, []);
 
+  // Função para buscar pastas do servidor
   const fetchFolders = async () => {
     try {
       const homeResponse = await fetch('http://localhost:8000/home/', {
@@ -44,6 +51,7 @@ function HomePage() {
     }
   };
 
+  // Criar uma nova pasta e, opcionalmente, enviar arquivos
   const handleFolderCreate = async () => {
     if (!folderName) {
       setError("Por favor, insira um nome para a pasta");
@@ -53,11 +61,9 @@ function HomePage() {
     const formData = new FormData();
     formData.append("folder_path", folderName);
 
-    if (files.length > 0) {
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
-    }
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
 
     try {
       const response = await fetch("http://localhost:8000/create_folder/", {
@@ -74,11 +80,12 @@ function HomePage() {
 
       if (response.ok) {
         setError(null);
-        alert("Pasta criada com sucesso!");
+        const data = await response.json();
+        alert(data.message);
 
         setFolderName("");
         setFiles([]);
-        setFileInputKey(Date.now()); // Atualiza a chave para resetar o input
+        resetFileInput(); // Reseta o input de arquivos
 
         fetchFolders();
       } else {
@@ -90,12 +97,11 @@ function HomePage() {
     }
   };
 
-  const handleFileChange = (event) => {
-    setFiles(Array.from(event.target.files));
-  };
-
+  // Excluir uma pasta do servidor
   const handleFolderDelete = async (folderPath) => {
-    const response = await fetch(`http://localhost:8000/delete_folder/${folderPath}`, {
+    const encodedFolderPath = encodeURIComponent(folderPath); 
+
+    const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
       method: 'DELETE',
       credentials: 'include',
     });
@@ -108,7 +114,7 @@ function HomePage() {
 
     if (response.ok) {
       alert('Pasta deletada com sucesso!');
-      fetchFolders();
+      fetchFolders(); // Atualiza a lista de pastas após exclusão
     } else {
       const errorData = await response.json();
       setError(errorData.detail || 'Erro desconhecido');
@@ -116,38 +122,43 @@ function HomePage() {
   };
 
   return (
-    <div>
-      <h1>Crie uma nova pasta</h1>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <input
-        type="text"
-        value={folderName}
-        onChange={(e) => setFolderName(e.target.value)}
-        placeholder="Nome da pasta"
-      />
-      <input
-        key={fileInputKey} // Reseta o input ao mudar a key
-        type="file"
-        multiple
-        onChange={handleFileChange}
-      />
-      <button onClick={handleFolderCreate}>Criar Pasta</button>
+    <div className={styles.container}>
+      <Header />
+      <div className={styles.folderSection}>
+        <div className={styles.topSection}>
+          <h1 className={styles.title}>Crie uma nova pasta</h1>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
 
-      <h2>Minhas Pastas</h2>
-      {folders.length > 0 ? (
-        <ul>
-          {folders.map((folder) => (
-            <li key={folder.id}>
-              <a href={`/folders/${folder.path}`}>{folder.path}</a>
-              <button onClick={() => handleFolderDelete(folder.path)} style={{ marginLeft: '10px' }}>
-                Deletar
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Você ainda não tem pastas.</p>
-      )}
+          <input
+            className={styles.inputField}
+            type="text"
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+            placeholder="Nome da pasta"
+          />
+
+          <div className={styles.uploadContainer}>
+            <CustomFileInput 
+              onFileSelect={setFiles} 
+              resetInput={(resetFn) => (resetFileInput = resetFn)} 
+            />
+            <button className={styles.button} onClick={handleFolderCreate}>Criar Pasta</button>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.bottomSection}>
+        <h2 className={styles.subtitle}>Folders</h2>
+        {folders.length > 0 ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "75px" }}>
+            {folders.map((folder) => (
+              <FolderItem key={folder.id} folder={folder} onDelete={handleFolderDelete} />
+            ))}
+          </div>
+        ) : (
+          <p>Você ainda não tem pastas.</p>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Modal from "react-modal";
-
-Modal.setAppElement("#__next");
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Importando o CSS para o Toast
+import styles from "../styles/Modal.module.css";
 
 export default function Home() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(true);
@@ -13,62 +14,74 @@ export default function Home() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/login/", {
-        username,
-        password,
-      }, { withCredentials: true });
-
-      alert(response.data.message);
-      window.location.href = "/home"; 
+      const response = await axios.post(
+        "http://localhost:8000/login/",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+  
+      toast.success(response.data.message); 
+      window.location.href = "/home";
     } catch (error) {
-      alert(error.response?.data?.detail || "Login failed");
+      toast.error(error.response?.data?.detail || "Login falhou");
     }
   };
-
+  
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:8000/register/", {
-        username,
-        email,
-        password,
-      }, { withCredentials: true });
-
-      alert("Conta criada com sucesso!");
+      await axios.post(
+        "http://localhost:8000/register/",
+        {
+          username,
+          email,  
+          password,
+        },
+        { withCredentials: true }
+      );
+  
+      toast.success("Conta criada com sucesso!");
       setRegisterModalOpen(false);
       setLoginModalOpen(true);
     } catch (error) {
-      alert(error.response?.data?.detail || "Falha ao criar conta!");
+      toast.error(error.response?.data?.detail || "Falha ao criar conta!"); // Exibe um toast de erro
     }
   };
 
   return (
-    <div>
-      <h1>Cognizant</h1>
-
+    <div className={styles["react-modal"]}>
       {/* Modal Login */}
       <Modal
         isOpen={isLoginModalOpen}
         shouldCloseOnOverlayClick={false}
         shouldCloseOnEsc={false}
-        className="react-modal-content"
-        overlayClassName="react-modal-overlay"
+        className={styles["react-modal-content"]}
+        overlayClassName={styles["react-modal-overlay"]}
       >
-        <h2>Cognizant</h2>
+        <img
+          src="https://cognizant.scene7.com/is/content/cognizant/COG-Logo-2022-1?fmt=png-alpha"
+          alt="Cognizant Logo"
+          className={styles["modal-img"]}
+        />
         <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email" 
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={styles["input-field"]}
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles["input-field"]}
         />
-        <button onClick={handleLogin}>Login</button>
-        <button onClick={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }}>
-          Criar conta
+        <button className={styles["button-primary"]} onClick={handleLogin}>Sign in</button>
+        <button className={styles["button-secondary"]} onClick={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }}>
+          Sign up
         </button>
       </Modal>
 
@@ -77,33 +90,43 @@ export default function Home() {
         isOpen={isRegisterModalOpen}
         shouldCloseOnOverlayClick={false}
         shouldCloseOnEsc={false}
-        className="react-modal-content"
-        overlayClassName="react-modal-overlay"
+        className={styles["react-modal-content"]}
+        overlayClassName={styles["react-modal-overlay"]}
       >
-        <h2>Criar conta</h2>
+        <img
+          src="https://cognizant.scene7.com/is/content/cognizant/COG-Logo-2022-1?fmt=png-alpha"
+          alt="Cognizant Logo"
+          className={styles["modal-img"]}
+        />
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className={styles["input-field"]}
         />
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={styles["input-field"]}
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles["input-field"]}
         />
-        <button onClick={handleRegister}>Criar conta</button>
-        <button onClick={() => { setRegisterModalOpen(false); setLoginModalOpen(true); }}>
-          Voltar para Login
+        <button className={styles["button-primary"]} onClick={handleRegister}>Submit</button>
+        <button className={styles["button-secondary"]} onClick={() => { setRegisterModalOpen(false); setLoginModalOpen(true); }}>
+          Back
         </button>
       </Modal>
+
+      {/* Container for toasts */}
+      <ToastContainer />
     </div>
   );
 }

@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+.logo img {
+  height: 40px; 
+  width: auto;
+  display: block;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  text-decoration: none;
+  color: #063a72;
+  font-size: 20px;
+  position: relative;
+  right: 60px;
+  transition: ease 0.3s;
+}
+
+.title:hover {
+  color: #007bff;
+}
+
+.logoutButton {
+  color: #063a72;
+  background-color: white;
+  font-size: 20px;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: ease 0.3s;
+}
+.logoutButton:hover {
+  color: #007bff;
+}
+
+.icon {
+  position: relative;
+  top: 3px;
+}

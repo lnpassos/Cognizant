@@ -20,7 +20,6 @@ export async function uploadFile(folderName, file) {
   }
 }
 
-
 export const deleteFile = async (folderPath, fileName) => {
   try {
     const response = await fetch(
@@ -35,8 +34,6 @@ export const deleteFile = async (folderPath, fileName) => {
     throw new Error("Erro ao deletar arquivo");
   }
 };
-
-
 
 export async function downloadFile(folderName, fileName) {
   try {

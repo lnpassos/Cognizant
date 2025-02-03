@@ -1,43 +1,44 @@
-/* styles/globals.css */
+/* Adicionando o link do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 /* Reset de margens e padding */
 * {
-    margin: 0;
-    padding: 0;
-    color: rgb(56, 59, 221);
-    box-sizing: border-box;
-  }
-  
-  /* Corpo da aplicação */
-  body {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background: linear-gradient(135deg, #1b1b1b 50%, #1b1b1b 50%);
-    background-size: cover;  
-    background-position: center;  
-    background-repeat: no-repeat; 
-    height: 100vh;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  /* Estilos para o container principal */
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: #ffffff;
-  }
-  
-  /* Botões principais */
-  button {
-    border: none;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
 
+/* Estilos para o corpo da aplicação */
+body {
+  background-color: #ffffff;
+}
 
-  /* styles/globals.css */
+/* Layout geral: aplica estilos diferentes para login e outras páginas */
+.limited-width {
+  max-width: 1300px; 
+  margin: 0 auto; 
+  padding: 0 20px; 
+}
+
+.full-width {
+  width: 100%; /* Página de login ocupa toda a largura */
+  padding: 0;
+}
+
+/* Estilos para o container principal */
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+/* Botões principais */
+button {
+  border: none;
+}
+
+/* Mensagem de sessão expirada */
 .session-expired-message {
   position: fixed;
   top: 0;

@@ -1,14 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { uploadFile, downloadFile, deleteFile } from "../api/folder"; // Função de deleteFile adicionada
+import { uploadFile, downloadFile } from "../api/folder";
+import Header from "../../components/Header";
+import SearchFilter from "../../components/SearchFilter"; // Importando o componente de filtro
+import styles from "../../styles/Files.module.css";
+
+const supportedFormats = ["jpg", "jpeg", "png", "gif", "svg", "webp", "pdf", "mp4", "webm", "ogg", "mp3", "wav", "md"];
 
 function FolderPage() {
   const router = useRouter();
-  const { path } = router.query; // 'path' contém a estrutura da pasta (ex: ['documents', 'reviews'])
+  const { path } = router.query;
   const folderPath = Array.isArray(path) ? path.join("/") : "";
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
+  const [filteredFiles, setFilteredFiles] = useState([]); // Estado para armazenar os arquivos filtrados
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para armazenar o valor da busca
 
   useEffect(() => {
     if (folderPath) {
@@ -16,23 +23,29 @@ function FolderPage() {
     }
   }, [folderPath]);
 
-  // Função para buscar os arquivos da pasta
+  useEffect(() => {
+    if (searchQuery === "") {
+      setFilteredFiles(files); // Quando a busca estiver vazia, mostrar todos os arquivos
+    } else {
+      setFilteredFiles(
+        files.filter((file) =>
+          file.filename.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [searchQuery, files]);
+
   const fetchFiles = async () => {
     if (!folderPath) return;
-
     setLoading(true);
     try {
       const response = await fetch(
         `http://localhost:8000/folders/${encodeURIComponent(folderPath)}/files/`,
-        {
-          method: "GET",
-          credentials: "include", // Inclui o cookie com o token
-        }
+        { method: "GET", credentials: "include" }
       );
 
       if (response.status === 401) {
-        // Se a resposta for 401 (token não encontrado), redireciona para o login
-        router.push("/session-expired");  // Redireciona para a página "Sessão Expirada"
+        router.push("/session-expired");
         return;
       }
 
@@ -47,49 +60,41 @@ function FolderPage() {
     }
   };
 
-  // Função para fazer o upload do arquivo
   const handleFileUpload = async (event) => {
-    const files = event.target.files; // Pega todos os arquivos selecionados
+    const files = event.target.files;
     if (!files.length || !folderPath) return;
-  
+
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
-        return uploadFile(folderPath, file); // Faz upload de cada arquivo individualmente
-      });
-  
-      await Promise.all(uploadPromises); // Espera todos os uploads terminarem
-  
-      await fetchFiles(); // Atualiza a lista de arquivos após o upload
+      const uploadPromises = Array.from(files).map((file) =>
+        uploadFile(folderPath, file)
+      );
+
+      await Promise.all(uploadPromises);
+      await fetchFiles();
     } catch (error) {
       console.error("Erro no upload:", error);
     }
-  
-    // Reseta o input para permitir selecionar os mesmos arquivos novamente
+
     event.target.value = "";
   };
 
-  // Função para fazer o download do arquivo
   const handleFileDownload = (fileName) => {
     if (!folderPath) return;
     downloadFile(folderPath, fileName);
   };
 
-  // Função para deletar o arquivo
   const handleFileDelete = async (fileName) => {
     if (!folderPath || !fileName) return;
-  
     try {
-      // Formata a URL corretamente
       const response = await fetch(
-        `http://localhost:8000/delete_file/${encodeURIComponent(folderPath)}/${encodeURIComponent(fileName)}`,
-        {
-          method: "DELETE",
-          credentials: "include", // Inclui o cookie com o token
-        }
+        `http://localhost:8000/delete_file/${encodeURIComponent(
+          folderPath
+        )}/${encodeURIComponent(fileName)}`,
+        { method: "DELETE", credentials: "include" }
       );
-  
+
       if (response.ok) {
-        fetchFiles(); // Atualiza a lista de arquivos após a exclusão
+        fetchFiles();
       } else {
         const errorData = await response.json();
         alert(errorData.detail || "Erro ao deletar arquivo");
@@ -98,41 +103,103 @@ function FolderPage() {
       console.error("Erro ao deletar arquivo:", error);
     }
   };
-  
+
+  const previewFile = (folderPath, fileName) => {
+    if (!folderPath || !fileName) return;
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+
+    // Verificar se o formato do arquivo é suportado
+    if (supportedFormats.includes(fileExtension)) {
+      const fileUrl = `http://localhost:8000/preview/${encodeURIComponent(
+        folderPath
+      )}/${encodeURIComponent(fileName)}`;
+      window.open(fileUrl, "_blank"); // Abre o arquivo em uma nova aba
+    } else {
+      alert('Formato de arquivo não suportado para visualização direta.');
+    }
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  };
 
   return (
-    <div>
-      <h1>Pasta: {folderPath || "Carregando..."}</h1>
+    <>
+      <Header />
+      <div className={styles.folderContainer}>
+        <div className={styles.filterSection}>
+          <h1 className={styles.folderTitle}>/{folderPath || "Carregando..."}</h1>
+          <SearchFilter
+            className={styles.searchFilter}
+            onSearchChange={handleSearchChange} // Passando a função de busca
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            multiple
+            onChange={handleFileUpload}
+          />
+          <button
+            className={styles.uploadButton}
+            onClick={() => fileInputRef.current.click()}
+          >
+            📤 New file
+          </button>
+        </div>
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        multiple
-        onChange={handleFileUpload}
-      />
-      <button onClick={() => fileInputRef.current.click()}>📤 Fazer Upload</button>
+        {loading ? (
+          <p>Carregando arquivos...</p>
+        ) : filteredFiles.length > 0 ? (
+          <ul className={styles.fileList}>
+            {filteredFiles.map((file, index) => {
+              const fileExtension = file.filename.split('.').pop().toLowerCase();
+              const isViewable = supportedFormats.includes(fileExtension); // Verifica se o arquivo é visualizável
 
-      {loading ? (
-        <p>Carregando arquivos...</p>
-      ) : files.length > 0 ? (
-        <ul>
-          {files.map((file, index) => (
-            <li key={index}>
-              {file.filename}
-              <button onClick={() => handleFileDownload(file.filename)}>
-                Baixar
-              </button>
-              <button onClick={() => handleFileDelete(file.filename)} style={{ marginLeft: '10px' }}>
-                Deletar
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nenhum arquivo encontrado.</p>
-      )}
-    </div>
+              return (
+                <li key={index} className={styles.fileItem}>
+                  <span
+                    onClick={() => previewFile(folderPath, file.filename)}
+                    className={styles.fileName}
+                    title={file.filename} // Tooltip mostrando o nome do arquivo
+                  >
+                    {file.filename}
+                  </span>
+                  <div className={styles.fileActions}>
+                    {/* Exibe o ícone de visualização apenas se o formato for suportado */}
+                    {isViewable && (
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => previewFile(folderPath, file.filename)}
+                        title="Visualizar arquivo" // Tooltip para visualizar
+                      >
+                        👁️
+                      </button>
+                    )}
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => handleFileDownload(file.filename)}
+                      title="Baixar arquivo" // Tooltip para baixar
+                    >
+                      📥
+                    </button>
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => handleFileDelete(file.filename)}
+                      title="Deletar arquivo" // Tooltip para deletar
+                    >
+                      ❌
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className={styles.noFilesMessage}>Nenhum arquivo encontrado.</p>
+        )}
+      </div>
+    </>
   );
 }
 
