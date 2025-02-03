@@ -51,3 +51,31 @@ button {
   font-size: 16px;
   z-index: 1000;
 }
+
+
+  /* Novo estilo para a seção do filtro */
+  .filterSection {
+    display: flex;
+    justify-content: space-between; /* Garante que os itens fiquem separados */
+    align-items: center; /* Alinha verticalmente os itens */
+    gap: 10px; /* Espaçamento entre os itens */
+  }
+  
+  .searchFilter {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .searchFilter:focus {
+    border-color: #0078d7;
+    outline: none;
+
+  }
+  
+  .searchFilter::placeholder {
+    color: #888;
+  }

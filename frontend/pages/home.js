@@ -2,15 +2,20 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Header from "../components/Header";
 import FolderItem from "../components/FolderItem";
-import CustomFileInput from "../components/UploadFile"; 
-import styles from '../styles/Home.module.css'; 
+import CustomFileInput from "../components/UploadFile";
+import SearchFilter from "../components/SearchFilter"; // Importa o componente de filtro
+import styles from '../styles/Home.module.css';
+import Pagination from "../components/Pagination";
 
 function HomePage() {
   const [folderName, setFolderName] = useState('');
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
+  const [filteredFolders, setFilteredFolders] = useState([]); // Novo estado para pastas filtradas
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Estado para controlar a página atual
   const router = useRouter();
+  const ITEMS_PER_PAGE = 10;
 
   let resetFileInput = () => {}; // Variável para armazenar a função de reset
 
@@ -45,10 +50,19 @@ function HomePage() {
       if (response.ok) {
         const data = await response.json();
         setFolders(data);
+        setFilteredFolders(data); // Inicializa as pastas filtradas com todos os dados
       }
     } catch (error) {
       setError('Erro ao buscar pastas. Tente novamente mais tarde.');
     }
+  };
+
+  // Função para atualizar o filtro de pesquisa
+  const handleSearchChange = (searchQuery) => {
+    const filtered = folders.filter((folder) =>
+      folder.path.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredFolders(filtered); // Atualiza a lista de pastas filtradas
   };
 
   // Criar uma nova pasta e, opcionalmente, enviar arquivos
@@ -121,6 +135,20 @@ function HomePage() {
     }
   };
 
+  // Lógica de Paginação
+  const totalFolders = filteredFolders.length;  // Número total de pastas
+  const totalPages = Math.ceil(totalFolders / ITEMS_PER_PAGE); // Total de páginas
+  const paginatedFolders = filteredFolders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);  // Ajusta para a última página se a página atual for inválida
+    }
+  }, [currentPage, totalPages]);
+
   return (
     <div className={styles.container}>
       <Header />
@@ -148,16 +176,28 @@ function HomePage() {
       </div>
 
       <div className={styles.bottomSection}>
-        <h2 className={styles.subtitle}>Folders</h2>
-        {folders.length > 0 ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <h2 className={styles.subtitle}>URL's</h2>
+          <SearchFilter onSearchChange={handleSearchChange} className={styles.searchFilter} />
+        </div>
+
+        {paginatedFolders.length > 0 ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "75px" }}>
-            {folders.map((folder) => (
+            {paginatedFolders.map((folder) => (
               <FolderItem key={folder.id} folder={folder} onDelete={handleFolderDelete} />
             ))}
           </div>
         ) : (
           <p>Você ainda não tem pastas.</p>
         )}
+        
+        {/* Componente de Paginação */}
+        <Pagination
+          totalItems={totalFolders}
+          itemsPerPage={ITEMS_PER_PAGE}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

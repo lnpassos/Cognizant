@@ -3,7 +3,7 @@ import axios from "axios";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Importando o CSS para o Toast
-import styles from "../styles/Modal.module.css";
+import styles from "../styles/Index.module.css";
 
 export default function Home() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(true);

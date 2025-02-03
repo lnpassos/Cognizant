@@ -11,26 +11,27 @@
 .folderSection {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
 }
 
 /* Seção superior (Criação de Pasta) */
 .topSection {
   padding: 20px;
+  position: relative;
+  bottom: 40px;
   border-bottom: 2px solid #ddd;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 500px;
+  max-width: 1170px;
   align-self: center; /* Apenas essa seção fica centralizada */
 }
 
 /* Input e Upload centralizados */
 .inputField {
   margin: 10px 0;
-  width: 100%;
+  width: 250px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -47,7 +48,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   width: 100%;
 }
 
@@ -72,6 +72,8 @@
 
 /* Seção inferior (Lista de Pastas) */
 .bottomSection {
+  position: relative;
+  bottom: 40px;
   flex: 1;
   padding: 20px;
   display: flex;
@@ -82,7 +84,14 @@
 
 /* Subtítulo centralizado */
 .subtitle {
-  margin-bottom: 10px;
+  position: absolute;
+  left: 45px;
+  top: 0px;
+  font-size: 25px;
   color: #005a9e;
-  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 5px;
+  font-style: italic;
+  letter-spacing: 1px;
+  font-family: Calibri;
 }

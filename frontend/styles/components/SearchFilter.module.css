@@ -1,0 +1,43 @@
+/* components/Filter.module.css */
+
+.inputWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .searchFilter {
+    padding: 8px 12px;
+    padding-left: 40px !important;; 
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease
+  }
+  
+  .searchFilter:focus {
+    border-color: #0078d7;
+    outline: none;
+    box-shadow: 0 0 2px rgba(0, 120, 215, 0.5);
+  }
+  
+  .searchFilter::placeholder {
+    color: #888;
+    opacity: 0.6;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 10px; /* Coloca o ícone à esquerda */
+    top: 50%; /* Alinha o ícone verticalmente ao centro */
+    transform: translateY(-50%); /* Ajusta o ícone para ficar centralizado */
+    color: #0078d7;
+    font-size: 1.2rem;
+  }
+  
+  .searchFilter:disabled {
+    background-color: #f1f1f1;
+    cursor: not-allowed;
+  }
+  
