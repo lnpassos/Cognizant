@@ -5,3 +5,6 @@ databases
 pydantic==1.10.7
 passlib[bcrypt]
 python-multipart
+ruff
+openai
+pytest

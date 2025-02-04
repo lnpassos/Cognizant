@@ -1,0 +1,205 @@
+.chatContainer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+    width: 320px;
+    font-family: 'Segoe UI'
+}
+
+.chatBox {
+    width: 100%;
+    max-width: 320px;
+    background: var(--background-light);
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chatBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.chatButton {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 50px; /* Bordas arredondadas para um visual mais moderno */
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+/* Efeito ao passar o mouse (hover) */
+.chatButton:hover {
+    transform: translateY(-2px); /* Efeito de leve elevação */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chatHeader {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chatHeader button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: opacity 0.3s ease;
+}
+
+.chatHeader button:hover {
+    opacity: 0.8;
+}
+
+.chatOptions {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-light);
+}
+
+.chatOptions button {
+    margin: 8px 0;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chatOptions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chatMessages {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 15px;
+    background: var(--background-light);
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.userMessage {
+    text-align: right;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 15px;
+    margin: 8px 0;
+    max-width: 80%;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.botMessage {
+    text-align: left;
+    background: #f1f1f1;
+    color: var(--text-light);
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 0;
+    margin: 8px 0;
+    max-width: 80%;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chatInput {
+    display: flex;
+    padding: 15px;
+    background: var(--background-light);
+    border-top: 1px solid #e0e0e0;
+}
+
+.chatInput input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.chatInput input:focus {
+    border-color: var(--primary-color);
+}
+
+.chatInput button {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chatInput button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.loading {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Ícones e Animações */
+.chatHeader button i {
+    font-size: 18px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.chatMessages .userMessage,
+.chatMessages .botMessage {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .chatContainer {
+        width: 100%;
+        right: 0;
+        bottom: 0;
+    }
+
+    .chatBox {
+        max-width: 100%;
+        border-radius: 0;
+    }
+}

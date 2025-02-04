@@ -91,6 +91,7 @@
   cursor: pointer;
   margin-top: 10px;
   transition: 0.3s ease;
+  text-decoration: underline;
 }
 
 .button-secondary:hover {

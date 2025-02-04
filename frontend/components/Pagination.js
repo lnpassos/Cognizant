@@ -36,7 +36,7 @@ const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => 
       </button>
 
       <span className={styles.pageCount}>
-        {`Página ${currentPage} de ${totalPages}`}
+        {`Page ${currentPage} / ${totalPages}`}
       </span>
     </div>
   );

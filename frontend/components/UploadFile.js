@@ -31,7 +31,7 @@ const CustomFileInput = ({ onFileSelect, resetInput }) => {
         alt="Upload" 
         className={styles.uploadIcon} 
       />
-      <span>{files.length > 0 ? files.map(f => f.name).join(", ") : "Nenhum arquivo escolhido"}</span>
+      <span>{files.length > 0 ? files.map(f => f.name).join(", ") : "No file selected."}</span>
       <input
         key={inputKey} // Isso força a re-renderização ao resetar
         type="file"

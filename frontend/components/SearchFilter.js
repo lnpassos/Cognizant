@@ -16,7 +16,7 @@ const SearchFilter = ({ onSearchChange, className }) => {
       <FaSearch className={styles.searchIcon} /> {/* Ícone de busca */}
       <input
         type="text"
-        placeholder="Filtrar..."
+        placeholder="Filter..."
         value={query}
         onChange={handleSearchChange}
         className={`${className} ${styles.searchFilter}`} // Combina a classe externa com a de filtro

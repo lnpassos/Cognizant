@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Modal from "react-modal";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Importando o CSS para o Toast
 import styles from "../styles/Index.module.css";
 
@@ -46,7 +46,7 @@ export default function Home() {
       setRegisterModalOpen(false);
       setLoginModalOpen(true);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Falha ao criar conta!"); // Exibe um toast de erro
+      toast.error(error.response?.data?.detail || "Falha ao criar conta!");
     }
   };
 
@@ -124,9 +124,6 @@ export default function Home() {
           Back
         </button>
       </Modal>
-
-      {/* Container for toasts */}
-      <ToastContainer />
     </div>
   );
 }

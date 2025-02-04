@@ -1,6 +1,17 @@
 /* Adicionando o link do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
+:root {
+  --primary-color: #007bff;
+  --primary-dark: #0056b3;
+  --background-light: #ffffff;
+  --background-dark: #1e1e1e;
+  --text-light: #333333;
+  --text-dark: #f1f1f1;
+  --shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --border-radius: 15px;
+}
+
 /* Reset de margens e padding */
 * {
   margin: 0;
@@ -51,31 +62,3 @@ button {
   font-size: 16px;
   z-index: 1000;
 }
-
-
-  /* Novo estilo para a seção do filtro */
-  .filterSection {
-    display: flex;
-    justify-content: space-between; /* Garante que os itens fiquem separados */
-    align-items: center; /* Alinha verticalmente os itens */
-    gap: 10px; /* Espaçamento entre os itens */
-  }
-  
-  .searchFilter {
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .searchFilter:focus {
-    border-color: #0078d7;
-    outline: none;
-
-  }
-  
-  .searchFilter::placeholder {
-    color: #888;
-  }

@@ -82,16 +82,3 @@
   width: 100%;
 }
 
-/* Subtítulo centralizado */
-.subtitle {
-  position: absolute;
-  left: 45px;
-  top: 0px;
-  font-size: 25px;
-  color: #005a9e;
-  text-decoration: underline;
-  margin-bottom: 5px;
-  font-style: italic;
-  letter-spacing: 1px;
-  font-family: Calibri;
-}

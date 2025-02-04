@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { uploadFile, downloadFile } from "../api/folder";
 import Header from "../../components/Header";
-import SearchFilter from "../../components/SearchFilter"; 
+import SearchFilter from "../../components/SearchFilter";
 import Pagination from "../../components/Pagination";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal";
 import styles from "../../styles/Files.module.css";
+import { toast } from "react-toastify";
 
 const supportedFormats = ["jpg", "jpeg", "png", "gif", "svg", "webp", "pdf", "mp4", "webm", "ogg", "mp3", "wav", "md"];
 const ITEMS_PER_PAGE = 7;
@@ -15,10 +17,13 @@ function FolderPage() {
   const folderPath = Array.isArray(path) ? path.join("/") : "";
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const [filteredFiles, setFilteredFiles] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState(null);
 
   useEffect(() => {
     if (folderPath) {
@@ -36,12 +41,14 @@ function FolderPage() {
         )
       );
     }
-    setCurrentPage(1); // Resetar para a primeira página ao filtrar
+    setCurrentPage(1);
   }, [searchQuery, files]);
 
   const fetchFiles = async () => {
     if (!folderPath) return;
     setLoading(true);
+    setError(null);
+
     try {
       const response = await fetch(
         `http://localhost:8000/folders/${encodeURIComponent(folderPath)}/files/`,
@@ -49,16 +56,23 @@ function FolderPage() {
       );
 
       if (response.status === 401) {
-        router.push("/session-expired");
+        router.push("/NotAuth");
         return;
       }
 
-      if (response.ok) {
-        const data = await response.json();
-        setFiles(data || []);
+      if (response.status === 403) {
+        router.push("/AccessDenied");
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar arquivos.");
+      }
+
+      const filesData = await response.json();
+      setFiles(filesData);
     } catch (error) {
-      console.error("Erro ao buscar arquivos:", error);
+      setError("Ocorreu um erro ao carregar os arquivos.");
     } finally {
       setLoading(false);
     }
@@ -87,25 +101,38 @@ function FolderPage() {
     downloadFile(folderPath, fileName);
   };
 
-  const handleFileDelete = async (fileName) => {
-    if (!folderPath || !fileName) return;
+  const handleFileDeleteClick = (fileName) => {
+    setFileToDelete(fileName);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!folderPath || !fileToDelete) return;
     try {
       const response = await fetch(
         `http://localhost:8000/delete_file/${encodeURIComponent(
           folderPath
-        )}/${encodeURIComponent(fileName)}`,
+        )}/${encodeURIComponent(fileToDelete)}`,
         { method: "DELETE", credentials: "include" }
       );
 
       if (response.ok) {
         fetchFiles();
+        toast.success(`Arquivo "${fileToDelete}" deletado com sucesso!`);
       } else {
         const errorData = await response.json();
-        alert(errorData.detail || "Erro ao deletar arquivo");
+        toast.error(errorData.detail || "Erro ao deletar arquivo");
       }
     } catch (error) {
       console.error("Erro ao deletar arquivo:", error);
+      toast.error("Ocorreu um erro ao deletar o arquivo.");
+    } finally {
+      setIsModalOpen(false);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
   };
 
   const previewFile = (folderPath, fileName) => {
@@ -126,110 +153,113 @@ function FolderPage() {
     setSearchQuery(query);
   };
 
-  // Paginação
-const totalFiles = filteredFiles.length;  // Número total de arquivos
-const totalPages = Math.ceil(totalFiles / ITEMS_PER_PAGE);
+  const totalFiles = filteredFiles.length;
+  const totalPages = Math.ceil(totalFiles / ITEMS_PER_PAGE);
 
-// Verifica se a página atual é maior que o total de páginas e ajusta
-const paginatedFiles = filteredFiles.slice(
-  (currentPage - 1) * ITEMS_PER_PAGE,
-  currentPage * ITEMS_PER_PAGE
-);
+  const paginatedFiles = filteredFiles.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
-useEffect(() => {
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(totalPages);  // Ajusta para a última página se a página atual for inválida
-  }
-}, [currentPage, totalPages]);
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
-return (
-  <>
-    <Header />
-    <div className={styles.folderContainer}>
-      <div className={styles.filterSection}>
-        <h1 className={styles.folderTitle}>/{folderPath || "Carregando..."}</h1>
-        <SearchFilter
-          className={styles.searchFilter}
-          onSearchChange={handleSearchChange}
-        />
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          multiple
-          onChange={handleFileUpload}
-        />
-        <button
-          className={styles.uploadButton}
-          onClick={() => fileInputRef.current.click()}
-        >
-          📤 New file
-        </button>
-      </div>
+  return (
+    <>
+      <Header />
+      <div className={styles.folderContainer}>
+        <div className={styles.filterSection}>
+          <h1 className={styles.folderTitle}>/{folderPath || "Carregando..."}</h1>
+          <SearchFilter
+            className={styles.searchFilter}
+            onSearchChange={handleSearchChange}
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            multiple
+            onChange={handleFileUpload}
+          />
+          <button
+            className={styles.uploadButton}
+            onClick={() => fileInputRef.current.click()}
+          >
+            📤 New file
+          </button>
+        </div>
 
-      {loading ? (
-        <p>Carregando arquivos...</p>
-      ) : paginatedFiles.length > 0 ? (
-        <>
-          <ul className={styles.fileList}>
-            {paginatedFiles.map((file, index) => {
-              const fileExtension = file.filename.split('.').pop().toLowerCase();
-              const isViewable = supportedFormats.includes(fileExtension);
+        {loading ? (
+          <p>Carregando arquivos...</p>
+        ) : paginatedFiles.length > 0 ? (
+          <>
+            <ul className={styles.fileList}>
+              {paginatedFiles.map((file, index) => {
+                const fileExtension = file.filename.split('.').pop().toLowerCase();
+                const isViewable = supportedFormats.includes(fileExtension);
 
-              return (
-                <li key={index} className={styles.fileItem}>
-                  <span
-                    onClick={() => previewFile(folderPath, file.filename)}
-                    className={styles.fileName}
-                    title={file.filename}
-                  >
-                    {file.filename}
-                  </span>
-                  <div className={styles.fileActions}>
-                    {isViewable && (
+                return (
+                  <li key={index} className={styles.fileItem}>
+                    <span
+                      onClick={() => previewFile(folderPath, file.filename)}
+                      className={styles.fileName}
+                      title={file.filename}
+                    >
+                      {file.filename}
+                    </span>
+                    <div className={styles.fileActions}>
+                      {isViewable && (
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => previewFile(folderPath, file.filename)}
+                          title="Visualizar arquivo"
+                        >
+                          👁️
+                        </button>
+                      )}
                       <button
                         className={styles.actionButton}
-                        onClick={() => previewFile(folderPath, file.filename)}
-                        title="Visualizar arquivo"
+                        onClick={() => handleFileDownload(file.filename)}
+                        title="Baixar arquivo"
                       >
-                        👁️
+                        📥
                       </button>
-                    )}
-                    <button
-                      className={styles.actionButton}
-                      onClick={() => handleFileDownload(file.filename)}
-                      title="Baixar arquivo"
-                    >
-                      📥
-                    </button>
-                    <button
-                      className={styles.actionButton}
-                      onClick={() => handleFileDelete(file.filename)}
-                      title="Deletar arquivo"
-                    >
-                      ❌
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => handleFileDeleteClick(file.filename)}
+                        title="Deletar arquivo"
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
 
-          {/* Componente de Paginação */}
-          <Pagination
-            totalItems={totalFiles}
-            itemsPerPage={ITEMS_PER_PAGE}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
-        </>
-      ) : (
-        <p className={styles.noFilesMessage}>Nenhum arquivo encontrado.</p>
-      )}
-    </div>
-  </>
-);
+            <Pagination
+              totalItems={totalFiles}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </>
+        ) : (
+          <p className={styles.noFilesMessage}>Nenhum arquivo encontrado.</p>
+        )}
+      </div>
 
+      <DeleteConfirmationModal
+        isOpen={isModalOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        folderToDelete={fileToDelete}
+      />
+    </>
+  );
 }
 
 export default FolderPage;

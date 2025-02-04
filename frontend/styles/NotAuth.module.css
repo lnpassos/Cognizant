@@ -1,0 +1,29 @@
+.sessionExpiredContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #ffffff; /* Texto branco */
+  text-align: center;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+}
+
+.imageContainer {
+  margin-bottom: 2rem;
+}
+
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ff5c5c; /* Cor vermelha para destaque */
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #a0a0a0; /* Cor cinza para o subtítulo */
+  margin-top: 0;
+}
