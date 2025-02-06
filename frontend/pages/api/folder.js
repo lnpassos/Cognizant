@@ -1,5 +1,6 @@
 export async function uploadFile(folderName, file) {
   const formData = new FormData();
+  
   formData.append("file", file);
 
   try {
@@ -20,13 +21,14 @@ export async function uploadFile(folderName, file) {
   }
 }
 
+
 export const deleteFile = async (folderPath, fileName) => {
   try {
     const response = await fetch(
       `http://localhost:8000/folders/${encodeURIComponent(folderPath)}/files/${encodeURIComponent(fileName)}`,
       {
         method: "DELETE",
-        credentials: "include", // Inclui o cookie com o token
+        credentials: "include",
       }
     );
     return response;
@@ -39,7 +41,7 @@ export async function downloadFile(folderName, fileName) {
   try {
     const response = await fetch(`http://localhost:8000/download/${folderName}/${fileName}`, {
       method: 'GET',
-      credentials: 'include', // Envia cookies de autenticação, se necessário
+      credentials: 'include', 
     });
     
     if (!response.ok) {

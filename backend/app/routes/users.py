@@ -48,7 +48,7 @@ async def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         key="access_token",
         value=access_token,
         httponly=True,
-        samesite="Lax",
+        samesite="Strict",
         secure=True,
         max_age=30 * 60,  # O token expira em 30 minutos
     )
@@ -74,7 +74,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
         key="access_token",
         value=access_token,
         httponly=True,
-        samesite="Lax",
+        samesite="Strict",
         secure=True,
         max_age=30 * 60,
     )
@@ -95,20 +95,15 @@ def logout():
 # Rota protegida (exemplo)
 @router.get("/protected/")
 def protected_route(request: Request, db: Session = Depends(get_db)):
-    # Verifica se o token está presente no cabeçalho
-    if "Authorization" not in request.headers:
-        raise HTTPException(status_code=401, detail="Token não encontrado")
-
-    # Obtém o token do cabeçalho
-    auth_header = request.headers["Authorization"]
-    token = auth_header.split("Bearer ")[-1] if auth_header.startswith("Bearer ") else None
+    # Obtém o token dos cookies
+    token = request.cookies.get("access_token")
 
     if not token:
-        raise HTTPException(status_code=401, detail="Token inválido")
+        raise HTTPException(status_code=401, detail="Token não encontrado")
 
     try:
         # Obtém o email do usuário a partir do token
-        email = auth_handler.get_current_user(token)
+        email = auth_handler.get_current_user(request)  # Método já busca nos cookies
         db_user = services.get_user_by_email(db, email=email)
 
         if not db_user:

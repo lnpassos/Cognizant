@@ -9,7 +9,6 @@ API_KEY = "sk-proj-I-5ZcTJVDXrDeA4K15ZmuBcGpaUW6vtbxqch0PX7Kis-6-LV-hLLwJ1m6-aBy
 # Instanciar o chatbot
 chatbot = Chatbot(api_key=API_KEY)
 
-
 class ChatRequest(BaseModel):
     message: str
     chatMode: str

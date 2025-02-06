@@ -37,8 +37,8 @@ const ChatBot = () => {
     
         // Verifica se a resposta é a mensagem de despedida
         if (data.reply.includes("👋 Até logo!")) {
-            setChatMode(null); // Reseta o chatMode para o menu inicial
-            setMessages([]); // Limpa as mensagens do chat
+            setChatMode(null);
+            setMessages([]);
         }
     };
 

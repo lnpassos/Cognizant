@@ -8,29 +8,32 @@ class Chatbot:
         self.messages = []
         self.predefined_questions = [
             (
-                "O que é esse projeto?",
-                "Este projeto é um sistema de controle de URLs, ou como eu gosto de chamar: 'Pastas', para envio e gerenciamento de arquivos. Você pode salvar e acessar seus arquivos a qualquer momento.",
+                "<b>O que é esse projeto?</b><br>",
+                " Este projeto é um <b>sistema de controle de URL's</b>, ou como eu gosto de chamar: <b>Pastas</b>. <br><br>Criado com foco em <b>gerenciamento de arquivos</b>, nos quais você pode <b>salva-los</b> e <b>acessa-los</b> a qualquer momento.",
             ),
             (
-                "Como usar o projeto?",
-                "Para utilizar o sistema, siga os seguintes passos:<br><br>"
-                "1️⃣ <b>**Autenticação**</b>: Crie uma conta e faça login para acessar o sistema.<br><br>"
-                "2️⃣ <b>**Acesso ao sistema**</b>: Após fazer login, você será direcionado à página inicial, onde pode criar sua primeira pasta.<br><br>"
-                "3️⃣ <b>**Criação de URL**</b>: Clique em 'Insert a URL', escolha um nome para sua URL, como 'documents/reviews'. Você pode, opcionalmente, enviar um arquivo junto, clicando no ícone de nuvem. Em seguida, clique em 'Send'.<br><br>"
-                "4️⃣ <b>**Acesso aos arquivos**</b>: Após criar sua URL, ela aparecerá na aba de pastas. Clique na pasta correspondente para visualizar os arquivos.<br><br>"
-                "5️⃣ <b>**Gerenciamento de arquivos**</b>:<br>"
-                "   - 📂 <b>**Visualização**</b>: Veja todos os arquivos enviados dentro da pasta correspondente.<br>"
-                "   - 🔍 <b>**Filtro**</b>: Utilize a barra de pesquisa para encontrar arquivos facilmente.<br>"
-                "   - ❌ <b>**Exclusão**</b>: Caso necessário, exclua arquivos indesejados.<br>"
-                "   - 👁️ <b>**Visualização**</b>: Clique no ícone de olho para visualizar arquivos compatíveis. Se o arquivo não puder ser lido diretamente, ele não será exibido.<br><br>"
-                "💡 <b>**Dica**</b>: Você pode enviar arquivos diretamente pelo input de URL, sem precisar estar dentro da pasta. Basta repetir a URL e enviar um novo arquivo.<br><br>"
-                "📌 <b>**Recursos disponíveis**</b>:<br>"
-                "- Criar URLs e enviar arquivos simultaneamente.<br>"
-                "- Acessar pastas associadas às URLs criadas.<br>"
-                "- Visualizar, deletar e gerenciar versões dos arquivos enviados.<br>"
-                "- Filtrar arquivos e URLs facilmente.<br>"
-                "- Criar novos arquivos diretamente na pasta correspondente.<br><br>"
-                "Espero que tenha ficado tudo bem claro! Caso tenha dúvidas, <b>consulte este guia novamente</b>! 🚀",
+                "<b>Como usar o projeto?</b><br>",
+                " Para utilizar o sistema, siga os seguintes passos:<br><br>"
+                "1️⃣ <b>** Autenticação **</b><br>Crie uma conta e faça login para acessar o sistema.<br><br>Para tornar a sua experiência mais <b>rápida</b> e <b>dinâmica</b>, a única validação que temos é para <b>E-mail</b>. Cogite usar algo como <b>seunome@gmail.com</b> por exemplo.<br><br>"
+                "2️⃣ <b>** Acesso ao sistema **</b><br> Após fazer login, você será direcionado à <b>Home</b>, onde pode criar e gerenciar suas pastas.<br><br>"
+                "3️⃣ <b>** Criação de URL **</b><br> Clique em 'Insert a URL' e escolha um nome para sua URL, como por exemplo: <b>'documents/reviews'</b>.<br><br> Você também pode, opcionalmente, enviar um ou mais arquivos juntos, clicando no ícone de <b>Nuvem</b>. Por fim, clique em <b>'Send'</b>.<br><br>"
+                "4️⃣ <b>** Acesso aos arquivos **</b> Após criar sua URL, ela aparecerá na aba de pastas. <br><br>Clique na pasta desejada para <b>visualizar os arquivos.</b><br><br>"
+                "5️⃣ <b>** Gerenciamento de arquivos **</b><br>"
+                " Aqui você pode visualizar e gerenciar todos seus arquivos enviados pela URL desejada.<br><br>"
+                "   📂 <b>** Visualização **</b><br> Veja todos os arquivos enviados dentro da pasta correspondente.<br><br>"
+                "   🔍 <b>** Filtro **</b><br> Utilize a barra de pesquisa para encontrar pastas ou arquivos facilmente. (Em suas respectivas páginas)<br><br>"
+                "   ❌ <b>** Exclusão **</b><br> Caso necessário, exclua pastas ou arquivos indesejados clicando no <b>X</b>.<br><br>"
+                "   👁️ <b>** Visualização **</b><br> Clique no ícone de olho para visualizar arquivos compatíveis com o navegador.<br><br> Se o arquivo não puder ser lido diretamente, ele não será exibido.<br><br>"
+                "   📥 <b>** Download **</b><br> Clique no ícone de download para baixar o arquivo que desejar.<br><br>"
+                "💡 <b>** Dica **</b><br> Você pode enviar arquivos diretamente pelo input de URL direto pela Home, sem precisar estar dentro da pasta. Basta repetir a URL e enviar um novo arquivo.<br><br>"
+                "📌 <b>** Recursos disponíveis **</b>:<br>"
+                "● Criar URLs e/ou enviar arquivos simultaneamente.<br><br>"
+                "● Enviar um ou mais arquivos para uma URL existente, apenas passandoa URL no input novamente.<br><br>"
+                "● Acessar pastas associadas às URLs criadas.<br><br>"
+                "● Visualizar, deletar e gerenciar versões dos arquivos enviados.<br><br>"
+                "● Filtrar arquivos e URLs facilmente.<br><br>"
+                "● Enviar novos arquivos diretamente na pasta que desejar.<br><br>"
+                "Espero que tenha ficado tudo bem claro! Caso tenha ficado alguma dúvida, fique à vontade para <b>consultar este guia novamente</b>! 🚀",
             ),
         ]
 
@@ -54,7 +57,7 @@ class Chatbot:
         """Modo de ajuda linear, onde o usuário recebe uma pergunta de cada vez."""
         if message is None:
             # Boas-vindas e opções para continuar ou sair
-            return "👋 Olá, sou o <b>Leo</b> e hoje eu serei o seu <b>guia</b>! Vamos começar?<br><br>Digite <b>'1'</b> para CONTINUAR ou <b>'2'</b> para SAIR<br><br>"
+            return "👋 Olá, sou o <b>Leo</b> e hoje eu serei o seu <b>guia</b>! Vamos começar?<br><br>Digite <b>1</b> para <b>CONTINUAR</b> ou <b>2</b> para <b>SAIR</b><br><br>"
         else:
             return self.process_user_choice(message)
 
@@ -63,7 +66,7 @@ class Chatbot:
         help_text = ""
         # Adicionando as perguntas e respostas do guia
         for question, answer in self.predefined_questions:
-            help_text += f"❓ {question}<br>💬 Leo: {answer}<br><br>"
+            help_text += f"❓ {question}<br>💬{answer}<br><br>"
         # Mensagem de finalização com opção de voltar ao menu inicial
         help_text += "<br>Caso queira voltar ao menu inicial, digite <b>'2'</b>.<br>"
         return help_text
@@ -98,4 +101,4 @@ class Chatbot:
         elif user_choice == "2":
             return self.end_help()
         else:
-            return "Escolha inválida. Digite '1' para continuar ou '2' para sair."
+            return "Escolha inválida. Digite <b>1</b> para <b>continuar</b> ou <b>2</b> para <b>sair</b>."

@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from io import BytesIO
 
 from app.db import Base, get_db
 from app.main import app  # Importe o FastAPI app principal
@@ -43,3 +44,12 @@ def client(db):
 @pytest.fixture(scope="function")
 def auth_handler():
     return AuthHandler()
+
+
+@pytest.fixture
+def test_file():
+    """
+    Retorna um arquivo de teste simulado para upload.
+    """
+    return ("test_file.txt", BytesIO(b"conteudo de teste"), "text/plain")
+

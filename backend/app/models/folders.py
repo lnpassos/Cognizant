@@ -13,6 +13,7 @@ class File(Base):
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey("users.id"))
     folder_id = Column(Integer, ForeignKey("folders.id"))
+    revision = Column(Integer, default=0)
 
     user = relationship("User", back_populates="files")
     folder = relationship("Folder", back_populates="files")

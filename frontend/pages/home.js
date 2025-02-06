@@ -7,6 +7,7 @@ import CustomFileInput from "../components/UploadFile";
 import SearchFilter from "../components/SearchFilter"; // Importa o componente de filtro
 import Pagination from "../components/Pagination";
 import styles from '../styles/Home.module.css';
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 function HomePage() {
   const [folderName, setFolderName] = useState('');
@@ -17,7 +18,9 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const ITEMS_PER_PAGE = 10;
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [folderToDelete, setFolderToDelete] = useState(null);
+  
   let resetFileInput = () => {}; 
 
   useEffect(() => {
@@ -128,6 +131,38 @@ function HomePage() {
     }
   };
 
+  const confirmDelete = async () => {
+    if (folderToDelete) {
+      const encodedFolderPath = encodeURIComponent(folderToDelete);
+  
+      const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+  
+      if (response.status === 401) {
+        router.push("/NotAuth");
+        return;
+      }
+  
+      if (response.ok) {
+        toast.success("Pasta deletada com sucesso!");
+        fetchFolders();
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.detail || "Erro desconhecido");
+      }
+    }
+  
+    setIsDeleteModalOpen(false);
+    setFolderToDelete(null);
+  };
+  
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setFolderToDelete(null);
+  };
+
   const totalFolders = filteredFolders.length;
   const totalPages = Math.ceil(totalFolders / ITEMS_PER_PAGE);
   const paginatedFolders = filteredFolders.slice(
@@ -186,6 +221,13 @@ function HomePage() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        folderToDelete={folderToDelete}
+      />
     </div>
   );
 }

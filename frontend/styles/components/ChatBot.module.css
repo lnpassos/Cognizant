@@ -3,13 +3,13 @@
     bottom: 20px;
     right: 20px;
     z-index: 1001;
-    width: 320px;
+    width: 400px;
     font-family: 'Segoe UI'
 }
 
 .chatBox {
     width: 100%;
-    max-width: 320px;
+    max-width: 400px;
     background: var(--background-light);
     box-shadow: var(--shadow);
     border-radius: var(--border-radius);

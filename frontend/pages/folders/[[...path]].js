@@ -135,19 +135,20 @@ function FolderPage() {
     setIsModalOpen(false);
   };
 
-  const previewFile = (folderPath, fileName) => {
+  const previewFile = (folderPath, fileName, revision) => {
     if (!folderPath || !fileName) return;
     const fileExtension = fileName.split('.').pop().toLowerCase();
-
+  
     if (supportedFormats.includes(fileExtension)) {
-      const fileUrl = `http://localhost:8000/preview/${encodeURIComponent(
+      const fileUrl = `http://localhost:8000/folders/${encodeURIComponent(
         folderPath
-      )}/${encodeURIComponent(fileName)}`;
+      )}/${encodeURIComponent(fileName)}?revision=${revision}`;
       window.open(fileUrl, "_blank");
     } else {
       alert('Formato de arquivo não suportado para visualização direta.');
     }
   };
+  
 
   const handleSearchChange = (query) => {
     setSearchQuery(query);
@@ -198,13 +199,14 @@ function FolderPage() {
           <>
             <ul className={styles.fileList}>
               {paginatedFiles.map((file, index) => {
+                 console.log("Dados do arquivo:", file); // Debug: veja o que está vindo
                 const fileExtension = file.filename.split('.').pop().toLowerCase();
                 const isViewable = supportedFormats.includes(fileExtension);
 
                 return (
                   <li key={index} className={styles.fileItem}>
                     <span
-                      onClick={() => previewFile(folderPath, file.filename)}
+                      onClick={() => previewFile(folderPath, file.filename, file.revision)}
                       className={styles.fileName}
                       title={file.filename}
                     >
@@ -214,7 +216,7 @@ function FolderPage() {
                       {isViewable && (
                         <button
                           className={styles.actionButton}
-                          onClick={() => previewFile(folderPath, file.filename)}
+                          onClick={() => previewFile(folderPath, file.filename, file.revision)}
                           title="Visualizar arquivo"
                         >
                           👁️
