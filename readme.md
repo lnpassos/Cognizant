@@ -239,8 +239,6 @@ PYTHONPATH=./ pytest app/tests
 
 
 ## Chatbot API
-
-### Overview
 The system also includes an **AI-powered chatbot** that offers two functionalities:
 1. **Help Mode (`help`)**: Guides users on how to utilize the system effectively.
 2. **Free Mode (`free`)**: Provides open-ended AI-powered conversations via the ChatGPT API.
