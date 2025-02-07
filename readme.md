@@ -80,6 +80,9 @@ Once both the backend and frontend are running, open your browser and navigate t
 - Both the **backend** and **frontend** must be running simultaneously for the system to function properly.
 - If you encounter any errors, ensure all dependencies are correctly installed and that the ports are not in use.
 
+**Recommendation**: When you start the project, click on *Virtual Assistant* in the bottom-right corner and select option *? Need Help*. Our AI is ready to assist you with the first steps.
+
+
 
 ## Authentication Endpoints
 
@@ -239,8 +242,6 @@ PYTHONPATH=./ pytest app/tests
 
 
 ## Chatbot API
-
-### Overview
 The system also includes an **AI-powered chatbot** that offers two functionalities:
 1. **Help Mode (`help`)**: Guides users on how to utilize the system effectively.
 2. **Free Mode (`free`)**: Provides open-ended AI-powered conversations via the ChatGPT API.
