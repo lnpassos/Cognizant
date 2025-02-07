@@ -105,7 +105,7 @@ Once both the backend and frontend are running, open your browser and navigate t
 
 ### Protected Home Route
 **GET** `/home/`
-- **Description**: A protected route that returns a personalized welcome message.
+- **Description**: A protected route for you to manage your system.
 - **Request Headers**:
   - `Cookie`: access_token (JWT authentication token)
 - **Response**:
