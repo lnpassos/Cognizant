@@ -73,7 +73,7 @@ Ensure you have the following installed on your machine:
 
 Once both the backend and frontend are running, open your browser and navigate to:
 
-👉 [http://localhost:3000/]
+👉 [http://localhost:3000/](http://localhost:3000/)
 
 ### Important Notes
 
