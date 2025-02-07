@@ -212,21 +212,21 @@ You can run the tests individually or all at once. Below are the commands to exe
 To test folders and files, run the following command:
 
 ```sh
-PYTHONPATH=./ pytest app/tests/test_folders
+$env:PYTHONPATH = "./"; pytest app/tests/test_folders
 ```
 
 ### User Tests  
 To test user-related functionality, run the following command:
 
 ```sh
-PYTHONPATH=./ pytest app/tests/test_users
+$env:PYTHONPATH = "./"; pytest app/tests/test_users
 ```
 
 ### Running All Tests  
 To run all tests at once, use the following command:
 
 ```sh
-PYTHONPATH=./ pytest app/tests
+$env:PYTHONPATH = "./"; pytest app/tests
 ```
 
 ## Notes  
@@ -234,7 +234,7 @@ PYTHONPATH=./ pytest app/tests
 - **Individual Tests**: You can run specific test files or test functions by specifying the path. Example:
   
   ```sh
-  PYTHONPATH=./ pytest app/tests/test_folders/test_create_folder.py::test_create_folder
+ $env:PYTHONPATH = "./"; pytest app/tests/test_folders/test_create_folder.py::test_create_folder
   ```  
   
 - **Test Coverage**: Ensure you have the necessary dependencies installed to measure test coverage if required.  
