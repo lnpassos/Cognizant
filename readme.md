@@ -238,13 +238,6 @@ PYTHONPATH=./ pytest app/tests
 - **Environment Variables**: The `PYTHONPATH=./` ensures that Python can locate the project modules correctly during testing.  
 
 
-## Notes  
-
-- **Individual Tests**: You can run specific test files or test functions by specifying the path.
-- **Test Coverage**: Ensure you have the necessary dependencies installed to measure test coverage if required.  
-- **Environment Variables**: The `PYTHONPATH=./` ensures that Python can locate the project modules correctly during testing.  
-
-
 ## Chatbot API
 
 ### Overview
