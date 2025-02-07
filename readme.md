@@ -87,6 +87,7 @@ Once both the backend and frontend are running, open your browser and navigate t
 **POST** `/register/`
 - **Description**: Creates a new user account.
 - **Request Body**:
+  - `username`: string (User's name)
   - `email`: string (User's email address)
   - `password`: string (User's password)
 - **Response**:
