@@ -10,9 +10,9 @@
 .chatBox {
     width: 100%;
     max-width: 400px;
-    background: var(--background-light);
-    box-shadow: var(--shadow);
-    border-radius: var(--border-radius);
+    background: #ffffff;;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -23,7 +23,7 @@
 }
 
 .chatButton {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -31,21 +31,20 @@
     justify-content: center;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 50px; /* Bordas arredondadas para um visual mais moderno */
+    border-radius: 50px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: var(--shadow);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Efeito ao passar o mouse (hover) */
 .chatButton:hover {
-    transform: translateY(-2px); /* Efeito de leve elevação */
+    transform: translateY(-2px); 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .chatHeader {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     padding: 15px;
     display: flex;
@@ -73,13 +72,13 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    background: var(--background-light);
+    background: #ffffff;
 }
 
 .chatOptions button {
     margin: 8px 0;
     padding: 12px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border: none;
     border-radius: 8px;
@@ -97,13 +96,13 @@
     max-height: 250px;
     overflow-y: auto;
     padding: 15px;
-    background: var(--background-light);
+    background: #ffffff;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .userMessage {
     text-align: right;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     padding: 10px 15px;
     border-radius: 15px 15px 0 15px;
@@ -116,7 +115,7 @@
 .botMessage {
     text-align: left;
     background: #f1f1f1;
-    color: var(--text-light);
+    color: #333333;
     padding: 10px 15px;
     border-radius: 15px 15px 15px 0;
     margin: 8px 0;
@@ -128,7 +127,7 @@
 .chatInput {
     display: flex;
     padding: 15px;
-    background: var(--background-light);
+    background: #ffffff;
     border-top: 1px solid #e0e0e0;
 }
 
@@ -143,11 +142,11 @@
 }
 
 .chatInput input:focus {
-    border-color: var(--primary-color);
+    border-color: #007bff;
 }
 
 .chatInput button {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border: none;
     padding: 10px 15px;
@@ -165,13 +164,12 @@
 
 .loading {
     text-align: center;
-    color: var(--primary-color);
+    color: #007bff;
     margin-top: 15px;
     font-size: 14px;
     font-weight: bold;
 }
 
-/* Ícones e Animações */
 .chatHeader button i {
     font-size: 18px;
 }
@@ -190,7 +188,6 @@
     animation: fadeIn 0.3s ease;
 }
 
-/* Responsividade */
 @media (max-width: 480px) {
     .chatContainer {
         width: 100%;

@@ -3,18 +3,18 @@ from jose import JWTError, jwt
 from fastapi import HTTPException, Request
 from pydantic import BaseModel
 
-# Configurações
-SECRET_KEY = "kj45k4jhg51g5jfh4f85gh1g5j1hj5fgh4gd4h"  # Coloque uma chave segura aqui
+# Configuration
+SECRET_KEY = "kj45k4jhg51g5jfh4f85gh1g5j1hj5fgh4gd4h"  # Set as an environment variable
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-# Modelo de dados para o token
+# Data model for token
 class TokenData(BaseModel):
     email: str
 
 
-# Classe para gerenciar autenticação
+# Authentication handler class
 class AuthHandler:
     def __init__(self):
         self.secret_key = SECRET_KEY
@@ -24,6 +24,7 @@ class AuthHandler:
     def create_access_token(
         self, data: dict, expires_delta: timedelta | None = None
     ) -> str:
+        # Generate a JWT access token with expiration.
         to_encode = data.copy()
         expire = datetime.utcnow() + (
             expires_delta or timedelta(minutes=self.access_token_expire_minutes)
@@ -32,24 +33,24 @@ class AuthHandler:
         encoded_jwt = jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
         return encoded_jwt
 
-
     def decode_token(self, token: str) -> TokenData:
+        # Decode and validate the JWT token.
         try:
             payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
             email: str = payload.get("sub")
             if email is None:
-                raise HTTPException(status_code=401, detail="Token inválido")
+                raise HTTPException(status_code=401, detail="Invalid token")
             exp = payload.get("exp")
             if exp and datetime.utcfromtimestamp(exp) < datetime.utcnow():
-                raise HTTPException(status_code=401, detail="Token expirado")
+                raise HTTPException(status_code=401, detail="Token expired")
             return TokenData(email=email)
         except JWTError:
-            raise HTTPException(status_code=401, detail="Token inválido ou expirado")
-
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
 
     def get_current_user(self, request: Request) -> str:
+        # Retrieve the current user from the request cookies.
         token = request.cookies.get("access_token")
         if not token:
-            raise HTTPException(status_code=401, detail="Token não encontrado")
+            raise HTTPException(status_code=401, detail="Token not found")
         token_data = self.decode_token(token)
         return token_data.email

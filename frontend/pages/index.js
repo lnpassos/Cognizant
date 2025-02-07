@@ -40,6 +40,7 @@ export default function Home() {
           password,
         },
         { withCredentials: true }
+        
       );
   
       toast.success("Conta criada com sucesso!");

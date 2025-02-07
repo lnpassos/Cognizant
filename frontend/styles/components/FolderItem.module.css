@@ -56,12 +56,12 @@
   }
   
   .deleteIcon {
-    color: rgb(248, 95, 95); /* Cor do ícone de deletar */
+    color: rgb(248, 95, 95); 
     font-size: 20px; 
     transition: color 0.3s ease;
   }
   
   .deleteIcon:hover {
-    color: rgb(255, 0, 0); /* Cor do ícone de deletar ao passar o mouse */
+    color: rgb(255, 0, 0); 
     font-size: 21px;
   }

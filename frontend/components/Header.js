@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import { FaSignOutAlt } from "react-icons/fa"; // Importando ícones
-import Link from "next/link"; // Importando Link do Next.js
+import { FaSignOutAlt } from "react-icons/fa"; 
+import Link from "next/link"; 
 import styles from "../styles/components/Header.module.css"; 
 
 export default function Header() {
@@ -10,23 +10,23 @@ export default function Header() {
     try {
       const response = await fetch("http://localhost:8000/logout/", { 
         method: "POST",
-        credentials: "include", // Inclui cookies na requisição
+        credentials: "include", 
       });
   
       if (response.ok) {
-        console.log("Logout realizado com sucesso");
-        router.push("/");
+        console.log("Logout successful");
+        router.push("/"); 
       } else {
-        console.error("Erro ao deslogar:", await response.json());
+        console.error("Error logging out:", await response.json());
       }
     } catch (error) {
-      console.error("Erro ao deslogar", error);
+      console.error("Error logging out", error);
     }
   };
 
   return (
     <header className={styles.header}>
-      <Link href="/home" className={styles.logo}> {/* Usando Link do Next.js */}
+      <Link href="/home" className={styles.logo}>
         <img
           src="https://cognizant.scene7.com/is/content/cognizant/COG-Logo-2022-1?fmt=png-alpha"
           alt="Cognizant Logo"
@@ -34,12 +34,12 @@ export default function Header() {
         />
       </Link>
 
-      <Link href="/home" className={styles.title}> {/* Usando Link do Next.js */}
+      <Link href="/home" className={styles.title}>
         Home
       </Link>
 
       <button onClick={handleLogout} className={styles.logoutButton}>
-        <FaSignOutAlt className={styles.icon} /> Sair
+        <FaSignOutAlt className={styles.icon} /> Logout
       </button>
     </header>
   );

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import users, folders, chatbot
 from app.db import Base, engine
 
-# Criar tabelas no banco de dados
+# Create the tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -13,7 +13,8 @@ origins = [
     "http://localhost:3000",
     "http://localhost",
 ]
-# Configuração do CORS
+
+# Cors
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Incluir rotas
+# Routes
 app.include_router(users.router)
 app.include_router(folders.router)
 app.include_router(chatbot.router)

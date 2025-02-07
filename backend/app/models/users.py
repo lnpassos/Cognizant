@@ -12,4 +12,4 @@ class User(Base):
     hashed_password = Column(String)
 
     folders = relationship("Folder", back_populates="user")
-    files = relationship("File", back_populates="user")
+    files = relationship("File", back_populates="user", lazy="joined")

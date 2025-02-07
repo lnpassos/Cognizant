@@ -8,3 +8,7 @@ python-multipart
 ruff
 openai
 pytest
+python-jose
+pytest
+sqlalchemy-utils
+aiohttp

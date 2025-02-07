@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import "../styles/globals.css";
-import ChatBot from "../components/ChatBot"; // Importe o ChatBot
-import { ToastContainer } from "react-toastify"; // Importe o ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Importe o CSS do ToastContainer
+import ChatBot from "../components/ChatBot";
+import { ToastContainer } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();

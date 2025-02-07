@@ -1,6 +1,5 @@
-// components/SearchFilter.js
 import { useState } from "react";
-import { FaSearch } from "react-icons/fa"; // Ícone de busca
+import { FaSearch } from "react-icons/fa";
 import styles from "../styles/components/SearchFilter.module.css";
 
 const SearchFilter = ({ onSearchChange, className }) => {
@@ -8,18 +7,18 @@ const SearchFilter = ({ onSearchChange, className }) => {
 
   const handleSearchChange = (e) => {
     setQuery(e.target.value);
-    onSearchChange(e.target.value); // Chama a função de busca com o valor do input
+    onSearchChange(e.target.value);
   };
 
   return (
     <div className={styles.inputWrapper}>
-      <FaSearch className={styles.searchIcon} /> {/* Ícone de busca */}
+      <FaSearch className={styles.searchIcon} />
       <input
         type="text"
         placeholder="Filter..."
         value={query}
         onChange={handleSearchChange}
-        className={`${className} ${styles.searchFilter}`} // Combina a classe externa com a de filtro
+        className={`${className} ${styles.searchFilter}`}
       />
       
     </div>

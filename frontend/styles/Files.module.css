@@ -86,16 +86,17 @@
     font-size: 1.2rem;
     color: #555;
     margin-top: 20px;
-    position: relative;
-    right: 28px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   
-  /* Novo estilo para a seção do filtro */
   .filterSection {
     display: flex;
-    justify-content: space-between; /* Garante que os itens fiquem separados */
-    align-items: center; /* Alinha verticalmente os itens */
-    gap: 10px; /* Espaçamento entre os itens */
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 10px; 
   }
   
   .searchFilter {

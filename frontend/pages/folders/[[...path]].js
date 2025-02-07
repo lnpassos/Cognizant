@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { uploadFile, downloadFile } from "../api/folder";
 import Header from "../../components/Header";
 import SearchFilter from "../../components/SearchFilter";
 import Pagination from "../../components/Pagination";
@@ -52,7 +51,12 @@ function FolderPage() {
     try {
       const response = await fetch(
         `http://localhost:8000/folders/${encodeURIComponent(folderPath)}/files/`,
-        { method: "GET", credentials: "include" }
+        { method: "GET", 
+          credentials: "include" ,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
 
       if (response.status === 401) {
@@ -83,11 +87,30 @@ function FolderPage() {
     if (!files.length || !folderPath) return;
 
     try {
-      const uploadPromises = Array.from(files).map((file) =>
-        uploadFile(folderPath, file)
-      );
+      const formData = new FormData();
+      Array.from(files).forEach(file => formData.append("file", file));
 
-      await Promise.all(uploadPromises);
+      const response = await fetch(`http://localhost:8000/upload/${folderPath}`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        router.push("/NotAuth");
+        return;
+      }
+
+      if (response.status === 403) {
+        router.push("/AccessDenied");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Falha no upload");
+      }
+
+      await response.json();
       await fetchFiles();
     } catch (error) {
       console.error("Erro no upload:", error);
@@ -98,8 +121,38 @@ function FolderPage() {
 
   const handleFileDownload = (fileName) => {
     if (!folderPath) return;
-    downloadFile(folderPath, fileName);
+  
+    fetch(`http://localhost:8000/download/${folderPath}/${fileName}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        if (response.status === 401) {
+
+          router.push("/NotAuth");
+          return;
+        }
+  
+        if (!response.ok) {
+          throw new Error('Falha na requisição');
+        }
+  
+        return response.blob();
+      })
+      .then(blob => {
+        if (blob) {
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+        }
+      })
+      .catch(error => console.error('Erro no download:', error));
   };
+  
 
   const handleFileDeleteClick = (fileName) => {
     setFileToDelete(fileName);
@@ -113,8 +166,18 @@ function FolderPage() {
         `http://localhost:8000/delete_file/${encodeURIComponent(
           folderPath
         )}/${encodeURIComponent(fileToDelete)}`,
-        { method: "DELETE", credentials: "include" }
+        { method: "DELETE", 
+          credentials: "include" ,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
+
+      if (response.status === 401) {
+        router.push("/NotAuth");
+        return;
+      }
 
       if (response.ok) {
         fetchFiles();
@@ -135,19 +198,47 @@ function FolderPage() {
     setIsModalOpen(false);
   };
 
-  const previewFile = (folderPath, fileName, revision) => {
+  const encodePath = (path) => {
+    // I am using this function to keep the URL as requested in the description
+    return path.split('/').map(encodeURIComponent).join('/');
+  };
+
+const previewFile = (folderPath, fileName, revision) => {
     if (!folderPath || !fileName) return;
     const fileExtension = fileName.split('.').pop().toLowerCase();
-  
+
     if (supportedFormats.includes(fileExtension)) {
-      const fileUrl = `http://localhost:8000/folders/${encodeURIComponent(
-        folderPath
-      )}/${encodeURIComponent(fileName)}?revision=${revision}`;
-      window.open(fileUrl, "_blank");
-    } else {
-      alert('Formato de arquivo não suportado para visualização direta.');
+
+        /* Here we could use encodeURIComponent directly, but it would encode
+           slashes ('/') as '%2F', which would make the URL messy and unreadable.
+           That's why we use the encodePath function to keep the slashes intact. */
+
+        const fileUrl = `http://localhost:8000/folders/${encodePath(
+            folderPath
+        )}/${encodeURIComponent(fileName)}?revision=${revision}`;
+
+        fetch(fileUrl, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    router.push("/NotAuth");
+                    return;
+                }
+
+                if (response.ok) {
+                    window.open(fileUrl, "_blank");
+                } else {
+                    console.error("Erro ao acessar o arquivo.");
+                }
+            })
+            .catch(error => console.error('Erro ao visualizar arquivo:', error));
     }
-  };
+};
   
 
   const handleSearchChange = (query) => {
@@ -194,12 +285,11 @@ function FolderPage() {
         </div>
 
         {loading ? (
-          <p>Carregando arquivos...</p>
+          <p>Loading files...</p>
         ) : paginatedFiles.length > 0 ? (
           <>
             <ul className={styles.fileList}>
               {paginatedFiles.map((file, index) => {
-                 console.log("Dados do arquivo:", file); // Debug: veja o que está vindo
                 const fileExtension = file.filename.split('.').pop().toLowerCase();
                 const isViewable = supportedFormats.includes(fileExtension);
 
@@ -250,7 +340,7 @@ function FolderPage() {
             />
           </>
         ) : (
-          <p className={styles.noFilesMessage}>Nenhum arquivo encontrado.</p>
+          <p className={styles.noFilesMessage}>No files found.</p>
         )}
       </div>
 

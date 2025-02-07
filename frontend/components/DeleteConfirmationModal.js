@@ -18,7 +18,7 @@ export default function DeleteConfirmationModal({
         <div className={styles.modalBody}>
           <IoWarningOutline className={styles.warningIcon} />
           <p>
-            Tem certeza que deseja excluir o arquivo <b>"{folderToDelete}"</b>?
+            Tem certeza que deseja excluir <b>"{folderToDelete}"</b>?
           </p>
         </div>
         <div className={styles.modalFooter}>

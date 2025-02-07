@@ -4,26 +4,30 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  color: #ffffff; /* Texto branco */
   text-align: center;
   padding: 20px;
   font-family: "Arial", sans-serif;
+  background:  white;
 }
 
 .imageContainer {
   margin-bottom: 2rem;
 }
 
+.image {
+  filter: drop-shadow(0 0 10px rgba(255, 92, 92, 0.5));
+}
 
 .title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #ff5c5c; /* Cor vermelha para destaque */
+  color: #ff5c5c; 
 }
 
 .subtitle {
   font-size: 1.2rem;
-  color: #a0a0a0; /* Cor cinza para o subtítulo */
+  color: #242424; 
   margin-top: 0;
+  opacity: 0.8;
 }

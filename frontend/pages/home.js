@@ -32,6 +32,9 @@ function HomePage() {
       const homeResponse = await fetch('http://localhost:8000/home/', { 
         method: 'GET',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (homeResponse.status === 401) {
@@ -42,6 +45,9 @@ function HomePage() {
       const homeResponseFolders = await fetch('http://localhost:8000/folders/', {
         method: 'GET',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (homeResponseFolders.status === 401) {
@@ -115,6 +121,9 @@ function HomePage() {
     const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
       method: 'DELETE',
       credentials: 'include',
+      headers: {
+          'Content-Type': 'application/json',
+        },
     });
 
     if (response.status === 401) {
@@ -138,6 +147,9 @@ function HomePage() {
       const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
         method: 'DELETE',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
   
       if (response.status === 401) {
@@ -205,21 +217,22 @@ function HomePage() {
         </div>
 
         {paginatedFolders.length > 0 ? (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "75px" }}>
-            {paginatedFolders.map((folder) => (
-              <FolderItem key={folder.id} folder={folder} onDelete={handleFolderDelete} />
-            ))}
-          </div>
+          <>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "75px" }}>
+              {paginatedFolders.map((folder) => (
+                <FolderItem key={folder.id} folder={folder} onDelete={handleFolderDelete} />
+              ))}
+            </div>
+            <Pagination
+              totalItems={totalFolders}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </>
         ) : (
-          <p>Você ainda não tem pastas.</p>
+          <p className={styles.noFoldersMessage}>No files found.</p>
         )}
-        
-        <Pagination
-          totalItems={totalFolders}
-          itemsPerPage={ITEMS_PER_PAGE}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
       </div>
 
       <DeleteConfirmationModal

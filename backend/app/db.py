@@ -1,27 +1,24 @@
-# db.py
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-SQLALCHEMY_DATABASE_URL = os.getenv(
-    "DATABASE_URL", "sqlite:///./test.db"
-)  # Exemplo com SQLite. Altere conforme necessário.
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
-# Criação do motor do banco de dados
+# Create the database engine
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},  # Para SQLite
+    connect_args={"check_same_thread": False},
 )
 
-# Criação da sessão local
+# Create the local session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base para criação dos modelos
+# Base for creating models
 Base = declarative_base()
 
 
-# Função para obter a sessão do banco de dados
+# Function to get the database session
 def get_db():
     db = SessionLocal()
     try:

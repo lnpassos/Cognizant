@@ -1,18 +1,6 @@
 /* Adicionando o link do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-:root {
-  --primary-color: #007bff;
-  --primary-dark: #0056b3;
-  --background-light: #ffffff;
-  --background-dark: #1e1e1e;
-  --text-light: #333333;
-  --text-dark: #f1f1f1;
-  --shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  --border-radius: 15px;
-}
-
-/* Reset de margens e padding */
 * {
   margin: 0;
   padding: 0;
@@ -20,45 +8,6 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Estilos para o corpo da aplicação */
-body {
-  background-color: #ffffff;
-}
-
-/* Layout geral: aplica estilos diferentes para login e outras páginas */
-.limited-width {
-  max-width: 1300px; 
-  margin: 0 auto; 
-  padding: 0 20px; 
-}
-
-.full-width {
-  width: 100%; /* Página de login ocupa toda a largura */
-  padding: 0;
-}
-
-/* Estilos para o container principal */
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  color: #ffffff;
-}
-
-/* Botões principais */
 button {
   border: none;
-}
-
-/* Mensagem de sessão expirada */
-.session-expired-message {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px;
-  background-color: red;
-  color: white;
-  text-align: center;
-  font-size: 16px;
-  z-index: 1000;
 }

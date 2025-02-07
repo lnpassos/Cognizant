@@ -1,8 +1,7 @@
 import styles from "../styles/components/Pagination.module.css";
 
 const Pagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
-  // Garante que totalItems e itemsPerPage sejam números válidos e maior que 0
-  const totalPages = Math.max(Math.ceil(totalItems / itemsPerPage), 1);  // Corrige para garantir que totalPages seja no mínimo 1
+  const totalPages = Math.max(Math.ceil(totalItems / itemsPerPage), 1);  
   
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
