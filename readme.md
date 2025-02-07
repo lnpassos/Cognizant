@@ -195,7 +195,13 @@ Once both the backend and frontend are running, open your browser and navigate t
 
 # Unit Tests
 
-To test the project using unit tests, you can run them individually or all at once. Below are the commands to execute the tests:
+To test the project using unit tests, you need to be inside the `backend` folder. Use the following command:
+
+```sh
+cd backend
+```
+
+You can run the tests individually or all at once. Below are the commands to execute the tests:
 
 ## Running Tests
 
@@ -222,7 +228,19 @@ PYTHONPATH=./ pytest app/tests
 
 ## Notes  
 
-- **Individual Tests**: You can run specific test files or test functions by specifying the path or function name after `pytest`.  
+- **Individual Tests**: You can run specific test files or test functions by specifying the path. Example:
+  
+  ```sh
+  PYTHONPATH=./ pytest app/tests/test_folders/test_create_folder.py::test_create_folder
+  ```  
+  
+- **Test Coverage**: Ensure you have the necessary dependencies installed to measure test coverage if required.  
+- **Environment Variables**: The `PYTHONPATH=./` ensures that Python can locate the project modules correctly during testing.  
+
+
+## Notes  
+
+- **Individual Tests**: You can run specific test files or test functions by specifying the path.  Ex: PYTHONPATH=./ pytest app/tests/test_folders/test_create_folder.py::test_create_folder.  
 - **Test Coverage**: Ensure you have the necessary dependencies installed to measure test coverage if required.  
 - **Environment Variables**: The `PYTHONPATH=./` ensures that Python can locate the project modules correctly during testing.  
 
