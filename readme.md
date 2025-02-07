@@ -210,6 +210,7 @@ You can run the tests individually or all at once. Below are the commands to exe
 
 ### Folder and File Tests  
 To test folders and files, run the following command:
+
 **Windows Powershell**
 ```sh
 $env:PYTHONPATH = "./"; pytest app/tests/test_folders
