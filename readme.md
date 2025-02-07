@@ -240,7 +240,7 @@ PYTHONPATH=./ pytest app/tests
 
 ## Notes  
 
-- **Individual Tests**: You can run specific test files or test functions by specifying the path.  Ex: PYTHONPATH=./ pytest app/tests/test_folders/test_create_folder.py::test_create_folder.  
+- **Individual Tests**: You can run specific test files or test functions by specifying the path.
 - **Test Coverage**: Ensure you have the necessary dependencies installed to measure test coverage if required.  
 - **Environment Variables**: The `PYTHONPATH=./` ensures that Python can locate the project modules correctly during testing.  
 
