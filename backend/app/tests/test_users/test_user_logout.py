@@ -1,4 +1,3 @@
-# Test for the logout route
 def test_logout(client):
     # Call the logout route
     response = client.post("/logout/")
