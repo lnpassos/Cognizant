@@ -9,6 +9,7 @@ ruff
 openai
 pytest
 python-jose
-pytest
 sqlalchemy-utils
 aiohttp
+python-dotenv
+bcrypt==3.2.0

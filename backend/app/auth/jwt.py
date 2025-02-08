@@ -1,10 +1,15 @@
+from dotenv import load_dotenv
+import os
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi import HTTPException, Request
 from pydantic import BaseModel
 
-# Configuration
-SECRET_KEY = "kj45k4jhg51g5jfh4f85gh1g5j1hj5fgh4gd4h"  # Set as an environment variable
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
+
+# Configuração
+SECRET_KEY = os.getenv("SECRET_KEY")  # Agora a chave será carregada do .env
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

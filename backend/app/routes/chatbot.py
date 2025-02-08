@@ -1,12 +1,24 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.bot.chatbot import Chatbot
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
 
 router = APIRouter()
-# Set as an environment variable / (My personal Key with $10)
-API_KEY = "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"
 
-# Initialize the Chatbot
+""" 
+    Here is the API key for testing purposes in this project. However, this is only for evaluation. 
+    For better security, in a real production system, we can configure the API key using Docker, 
+    Kubernetes Secrets, or directly as an environment variable on the server. 
+"""
+
+# Fetch the API key from the environment variable
+API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Initialize the Chatbot with the API key
 chatbot = Chatbot(api_key=API_KEY)
 
 
@@ -22,10 +34,10 @@ async def chat(request: ChatRequest):
         if request.message.strip() in ["1", "2"]:
             response = chatbot.help_mode(request.message.strip())
         else:
-            response = chatbot.help_mode()  # Retorna ao menu se não houver mensagem
+            response = chatbot.help_mode()  # Return to the menu if no message
     elif request.chatMode == "free":
         response = chatbot.free_chat_mode(request.message)
     else:
-        raise HTTPException(status_code=400, detail="Modo de chat inválido.")
+        raise HTTPException(status_code=400, detail="Invalid chat mode.")
 
     return {"reply": response}

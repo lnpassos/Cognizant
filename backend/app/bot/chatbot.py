@@ -10,10 +10,6 @@ knowing what functions are available and being able to test them one by one, mak
 Of course, we could build something much more robust by leveraging machine learning with tools 
 like Pytorch or scikit-learn and data science techniques to analyze user behavior and deliver a faster, more dynamic experience.
 
-AI could also be used to develop new features based on user needs, gathering insights and adapting the system intelligently to enhance usability and efficiency.
-
-This is just a starting point, and there are many possibilities to explore in the future :)
-
 Thanks!
 ~ Leo
 
