@@ -8,6 +8,11 @@ from pydantic import BaseModel
 
 load_dotenv()
 
+""" 
+    For better security, in a real production system, we can configure the API key using Docker, 
+    Kubernetes Secrets, or directly as an environment variable on the server. 
+"""
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
