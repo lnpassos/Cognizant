@@ -5,6 +5,7 @@ from jose import JWTError, jwt
 from fastapi import HTTPException, Request
 from pydantic import BaseModel
 
+
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
