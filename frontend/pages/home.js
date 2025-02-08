@@ -1,67 +1,45 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { toast } from "react-toastify"; // Importa o Toast
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { fetchFolders, createFolder, deleteFolder } from "../services/folderService";
 import Header from "../components/Header";
 import FolderItem from "../components/FolderItem";
 import CustomFileInput from "../components/UploadFile";
-import SearchFilter from "../components/SearchFilter"; // Importa o componente de filtro
+import SearchFilter from "../components/SearchFilter";
 import Pagination from "../components/Pagination";
-import styles from '../styles/Home.module.css';
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
+import styles from "../styles/Home.module.css";
 
 function HomePage() {
-  const [folderName, setFolderName] = useState('');
+  const [folderName, setFolderName] = useState("");
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
   const [filteredFolders, setFilteredFolders] = useState([]);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const router = useRouter();
-  const ITEMS_PER_PAGE = 10;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [folderToDelete, setFolderToDelete] = useState(null);
-  
-  let resetFileInput = () => {}; 
+  const router = useRouter();
+  const ITEMS_PER_PAGE = 10;
+
+  let resetFileInput = () => {};
 
   useEffect(() => {
-    fetchFolders();
+    loadFolders();
   }, []);
 
-  const fetchFolders = async () => {
+  const loadFolders = async () => {
     try {
-      const homeResponse = await fetch('http://localhost:8000/home/', { 
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const data = await fetchFolders();
 
-      if (homeResponse.status === 401) {
+      if (data.unauthorized) {
         router.push("/NotAuth");
         return;
       }
 
-      const homeResponseFolders = await fetch('http://localhost:8000/folders/', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (homeResponseFolders.status === 401) {
-        router.push("/NotAuth");
-        return;
-      }
-
-      if (homeResponseFolders.ok) { 
-        const data = await homeResponseFolders.json();
-        setFolders(data);
-        setFilteredFolders(data);
-      }
+      setFolders(data);
+      setFilteredFolders(data);
     } catch (error) {
-      toast.error("Erro ao buscar pastas.");
+      toast.error(error.message);
     }
   };
 
@@ -73,103 +51,49 @@ function HomePage() {
   };
 
   const handleFolderCreate = async () => {
-    if (!folderName) {
-      toast.error("Por favor, insira um nome para a pasta");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("folder_path", folderName);
-
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-
     try {
-      const response = await fetch("http://localhost:8000/create_folder/", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
+      const data = await createFolder(folderName, files);
 
-      if (response.status === 401) {
+      if (data.unauthorized) {
         router.push("/NotAuth");
         return;
       }
 
-      if (response.ok) {
-        const data = await response.json();
-        toast.success(data.message);
-
-        setFolderName("");
-        setFiles([]);
-        resetFileInput();
-
-        fetchFolders();
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.detail || "Erro desconhecido");
-      }
+      toast.success(data.message);
+      setFolderName("");
+      setFiles([]);
+      resetFileInput();
+      loadFolders();
     } catch (error) {
-      toast.error("Erro ao criar pasta.");
+      toast.error(error.message);
     }
   };
 
   const handleFolderDelete = async (folderPath) => {
-    const encodedFolderPath = encodeURIComponent(folderPath);
+    try {
+      const data = await deleteFolder(folderPath);
 
-    const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-          'Content-Type': 'application/json',
-        },
-    });
+      if (data.unauthorized) {
+        router.push("/NotAuth");
+        return;
+      }
 
-    if (response.status === 401) {
-      router.push("/NotAuth");
-      return;
-    }
-
-    if (response.ok) {
       toast.success("Pasta deletada com sucesso!");
-      fetchFolders();
-    } else {
-      const errorData = await response.json();
-      toast.error(errorData.detail || "Erro desconhecido");
+      loadFolders();
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   const confirmDelete = async () => {
     if (folderToDelete) {
-      const encodedFolderPath = encodeURIComponent(folderToDelete);
-  
-      const response = await fetch(`http://localhost:8000/delete_folder/${encodedFolderPath}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (response.status === 401) {
-        router.push("/NotAuth");
-        return;
-      }
-  
-      if (response.ok) {
-        toast.success("Pasta deletada com sucesso!");
-        fetchFolders();
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.detail || "Erro desconhecido");
-      }
+      await handleFolderDelete(folderToDelete);
     }
-  
+
     setIsDeleteModalOpen(false);
     setFolderToDelete(null);
   };
-  
+
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setFolderToDelete(null);
@@ -200,19 +124,17 @@ function HomePage() {
             onChange={(e) => setFolderName(e.target.value)}
             placeholder="Insert a URL"
           />
-
           <div className={styles.uploadContainer}>
-            <CustomFileInput 
-              onFileSelect={setFiles} 
-              resetInput={(resetFn) => (resetFileInput = resetFn)} 
-            />
-            <button className={styles.button} onClick={handleFolderCreate}>Send</button>
+            <CustomFileInput onFileSelect={setFiles} resetInput={(resetFn) => (resetFileInput = resetFn)} />
+            <button className={styles.button} onClick={handleFolderCreate}>
+              Send
+            </button>
           </div>
         </div>
       </div>
 
       <div className={styles.bottomSection}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           <SearchFilter onSearchChange={handleSearchChange} className={styles.searchFilter} />
         </div>
 
@@ -223,24 +145,14 @@ function HomePage() {
                 <FolderItem key={folder.id} folder={folder} onDelete={handleFolderDelete} />
               ))}
             </div>
-            <Pagination
-              totalItems={totalFolders}
-              itemsPerPage={ITEMS_PER_PAGE}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
+            <Pagination totalItems={totalFolders} itemsPerPage={ITEMS_PER_PAGE} currentPage={currentPage} onPageChange={setCurrentPage} />
           </>
         ) : (
           <p className={styles.noFoldersMessage}>No files found.</p>
         )}
       </div>
 
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-        folderToDelete={folderToDelete}
-      />
+      <DeleteConfirmationModal isOpen={isDeleteModalOpen} onConfirm={confirmDelete} onCancel={cancelDelete} folderToDelete={folderToDelete} />
     </div>
   );
 }

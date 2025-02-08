@@ -1,8 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
-import Modal from "react-modal";
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Importando o CSS para o Toast
+import { ClipLoader } from "react-spinners";
+import Modal from "react-modal";
+import { loginUser, registerUser } from "../services/userService";
 import styles from "../styles/Index.module.css";
 
 export default function Home() {
@@ -11,43 +12,32 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/login/",
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
-  
-      toast.success(response.data.message); 
-      window.location.href = "/home";
+      await loginUser(email, password);
+      router.push("/home");
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Login falhou");
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
+
   const handleRegister = async () => {
+    setIsLoading(true);
     try {
-      await axios.post(
-        "http://localhost:8000/register/",
-        {
-          username,
-          email,  
-          password,
-        },
-        { withCredentials: true }
-        
-      );
-  
+      await registerUser(username, email, password);
       toast.success("Conta criada com sucesso!");
       setRegisterModalOpen(false);
       setLoginModalOpen(true);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Falha ao criar conta!");
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +57,7 @@ export default function Home() {
           className={styles["modal-img"]}
         />
         <input
-          type="email" 
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -80,8 +70,16 @@ export default function Home() {
           onChange={(e) => setPassword(e.target.value)}
           className={styles["input-field"]}
         />
-        <button className={styles["button-primary"]} onClick={handleLogin}>Sign in</button>
-        <button className={styles["button-secondary"]} onClick={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }}>
+        <button className={styles["button-primary"]} onClick={handleLogin}>
+          {isLoading ? <ClipLoader size={24} color="#ffffff" /> : "Sign in"}
+        </button>
+        <button
+          className={styles["button-secondary"]}
+          onClick={() => {
+            setLoginModalOpen(false);
+            setRegisterModalOpen(true);
+          }}
+        >
           Sign up
         </button>
       </Modal>
@@ -120,8 +118,16 @@ export default function Home() {
           onChange={(e) => setPassword(e.target.value)}
           className={styles["input-field"]}
         />
-        <button className={styles["button-primary"]} onClick={handleRegister}>Submit</button>
-        <button className={styles["button-secondary"]} onClick={() => { setRegisterModalOpen(false); setLoginModalOpen(true); }}>
+        <button className={styles["button-primary"]} onClick={handleRegister}>
+          {isLoading ? <ClipLoader size={24} color="#ffffff" /> : "Submit"}
+        </button>
+        <button
+          className={styles["button-secondary"]}
+          onClick={() => {
+            setRegisterModalOpen(false);
+            setLoginModalOpen(true);
+          }}
+        >
           Back
         </button>
       </Modal>

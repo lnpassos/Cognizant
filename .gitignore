@@ -1,12 +1,10 @@
+.env
 
-# Python
 __pycache__/
 *.py[cod]
 *.pyo
 
-# Diretórios de testes
 tests/__pycache__/
 *.log
 
-# Arquivos de cache de pytest
 .pytest_cache/
