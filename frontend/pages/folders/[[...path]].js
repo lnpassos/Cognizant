@@ -112,7 +112,9 @@ function FolderPage() {
         ) : <p className={styles.noFilesMessage}>No files found.</p>}
       </div>
 
-      <DeleteConfirmationModal isOpen={isModalOpen} onConfirm={() => handleFileDelete(folderPath, fileToDelete, () => fetchFiles(folderPath, router, setFiles, setLoading, setError), router, toast, setIsModalOpen)} onCancel={() => setIsModalOpen(false)} />
+      <DeleteConfirmationModal isOpen={isModalOpen} onConfirm={() => handleFileDelete(folderPath, fileToDelete, () => 
+        fetchFiles(folderPath, router, setFiles, setLoading, setError), router, toast, setIsModalOpen)} 
+        onCancel={() => setIsModalOpen(false)} />
     </>
   );
 }

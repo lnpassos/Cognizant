@@ -5,7 +5,6 @@ export default function DeleteConfirmationModal({
   isOpen,
   onConfirm,
   onCancel,
-  folderToDelete,
 }) {
   if (!isOpen) return null;
 
@@ -13,20 +12,20 @@ export default function DeleteConfirmationModal({
     <div className={styles.modalOverlay}>
       <div className={styles.modalDelete}>
         <div className={styles.modalHeader}>
-          <span className={styles.modalTitle}>Confirmação</span>
+          <span className={styles.modalTitle}>Confirmation</span>
         </div>
         <div className={styles.modalBody}>
           <IoWarningOutline className={styles.warningIcon} />
           <p>
-            Tem certeza que deseja excluir <b>"{folderToDelete}"</b>?
+            Are you sure you want to delete?
           </p>
         </div>
         <div className={styles.modalFooter}>
           <button onClick={onConfirm} className={styles.confirmButton}>
-            Sim
+            Yes
           </button>
           <button onClick={onCancel} className={styles.cancelButton}>
-            Não
+            No
           </button>
         </div>
       </div>
