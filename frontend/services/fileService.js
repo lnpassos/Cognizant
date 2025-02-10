@@ -19,12 +19,12 @@ export const fetchFiles = async (folderPath, router, setFiles, setLoading, setEr
 
     if (response.status === 401) return router.push("/NotAuth");
     if (response.status === 403) return router.push("/AccessDenied");
-    if (!response.ok) throw new Error("Erro ao buscar arquivos.");
+    if (!response.ok) throw new Error("Error fetching files.");
 
     const filesData = await response.json();
     setFiles(filesData);
   } catch {
-    setError("Ocorreu um erro ao carregar os arquivos.");
+    setError("An error occurred while loading files.");
   } finally {
     setLoading(false);
   }
@@ -46,12 +46,12 @@ export const handleFileUpload = async (event, folderPath, fetchFiles, router) =>
 
     if (response.status === 401) return router.push("/NotAuth");
     if (response.status === 403) return router.push("/AccessDenied");
-    if (!response.ok) throw new Error("Falha no upload");
+    if (!response.ok) throw new Error("Upload failed");
 
     await response.json();
     await fetchFiles();
   } catch (error) {
-    console.error("Erro no upload:", error);
+    console.error("Upload error:", error);
   }
 
   event.target.value = "";
@@ -67,7 +67,7 @@ export const handleFileDownload = (folderPath, fileName, router) => {
   })
     .then(response => {
       if (response.status === 401) return router.push("/NotAuth");
-      if (!response.ok) throw new Error("Falha na requisição");
+      if (!response.ok) throw new Error("Request failed");
 
       return response.blob();
     })
@@ -79,7 +79,7 @@ export const handleFileDownload = (folderPath, fileName, router) => {
         link.click();
       }
     })
-    .catch(error => console.error("Erro no download:", error));
+    .catch(error => console.error("Download error:", error));
 };
 
 export const handleFileDelete = async (folderPath, fileToDelete, fetchFiles, router, toast, setIsModalOpen) => {
@@ -95,14 +95,14 @@ export const handleFileDelete = async (folderPath, fileToDelete, fetchFiles, rou
     if (response.status === 401) return router.push("/NotAuth");
     if (response.ok) {
       fetchFiles();
-      toast.success(`Arquivo "${fileToDelete}" deletado com sucesso!`);
+      toast.success(`File "${fileToDelete}" successfully deleted!`);
     } else {
       const errorData = await response.json();
-      toast.error(errorData.detail || "Erro ao deletar arquivo");
+      toast.error(errorData.detail || "Error deleting file");
     }
   } catch (error) {
-    console.error("Erro ao deletar arquivo:", error);
-    toast.error("Ocorreu um erro ao deletar o arquivo.");
+    console.error("Error deleting file:", error);
+    toast.error("An error occurred while deleting the file.");
   } finally {
     setIsModalOpen(false);
   }
@@ -133,12 +133,11 @@ export const previewFile = (folderPath, fileName, revision, router) => {
           if (response.ok) {
             window.open(fileUrl, "_blank");
           } else {
-            console.error("Erro ao acessar o arquivo.");
+            console.error("Error accessing file.");
           }
         })
-        .catch(error => console.error("Erro ao visualizar arquivo:", error));
+        .catch(error => console.error("Error previewing file:", error));
     } else {
-      console.error("Arquivo não suportado para visualização.");
+      console.error("File not supported for preview.");
     }
   };
-  

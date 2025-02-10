@@ -18,8 +18,8 @@ const AccessDenied = () => {
       <h1 className={styles.text}>
         You don't have permission to access this page!
       </h1>
-      <Link href="/home" className={styles.link}>
-        Back to Home
+      <Link href="/folders" className={styles.link}>
+        Back to Folders
       </Link>
     </div>
   );

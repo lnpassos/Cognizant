@@ -11,12 +11,12 @@ export const loginUser = async (email, password) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || "Erro ao fazer login.");
+      throw new Error(errorData.detail || "Error logging in.");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "Erro desconhecido.");
+    throw new Error(error.message || "Unknown error.");
   }
 };
 
@@ -31,11 +31,11 @@ export const registerUser = async (username, email, password) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || "Erro ao registrar usuário.");
+      throw new Error(errorData.detail || "Error registering user.");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "Erro desconhecido.");
+    throw new Error(error.message || "Unknown error.");
   }
 };

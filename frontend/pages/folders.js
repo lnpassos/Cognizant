@@ -78,7 +78,7 @@ function HomePage() {
         return;
       }
 
-      toast.success("Pasta deletada com sucesso!");
+      toast.success("Folder successfully deleted!");
       loadFolders();
     } catch (error) {
       toast.error(error.message);

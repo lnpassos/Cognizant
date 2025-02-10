@@ -31,7 +31,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       await registerUser(username, email, password);
-      toast.success("Conta criada com sucesso!");
+      toast.success("Account successfully created!");
       setRegisterModalOpen(false);
       setLoginModalOpen(true);
     } catch (error) {

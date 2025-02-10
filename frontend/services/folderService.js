@@ -13,19 +13,19 @@ export const fetchFolders = async () => {
     }
 
     if (!response.ok) {
-      throw new Error("Erro ao buscar pastas.");
+      throw new Error("Error fetching folders.");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "Erro desconhecido.");
+    throw new Error(error.message || "Unknown error.");
   }
 };
 
 export const createFolder = async (folderName, files) => {
   try {
     if (!folderName) {
-      throw new Error("Por favor, insira um nome para a pasta.");
+      throw new Error("Please enter a name for the folder.");
     }
 
     const formData = new FormData();
@@ -47,12 +47,12 @@ export const createFolder = async (folderName, files) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || "Erro ao criar pasta.");
+      throw new Error(errorData.detail || "Error creating folder.");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "Erro desconhecido.");
+    throw new Error(error.message || "Unknown error.");
   }
 };
 
@@ -71,11 +71,11 @@ export const deleteFolder = async (folderPath) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.detail || "Erro ao deletar pasta.");
+      throw new Error(errorData.detail || "Error deleting folder.");
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "Erro desconhecido.");
+    throw new Error(error.message || "Unknown error.");
   }
 };

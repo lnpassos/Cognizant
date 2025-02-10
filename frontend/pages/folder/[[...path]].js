@@ -77,7 +77,7 @@ function FolderPage() {
       <Header />
       <div className={styles.folderContainer}>
         <div className={styles.filterSection}>
-          <h1 className={styles.folderTitle}>/{folderPath || "Carregando..."}</h1>
+          <h1 className={styles.folderTitle}>/{folderPath || "Loading..."}</h1>
           <SearchFilter className={styles.searchFilter} onSearchChange={setSearchQuery} />
           <input type="file" ref={fileInputRef} style={{ display: "none" }} multiple
             onChange={(e) => handleFileUpload(e, folderPath, () => fetchFiles(folderPath, router, setFiles, setLoading, setError), router)}
@@ -98,10 +98,10 @@ function FolderPage() {
                   </span>
                   <div className={styles.fileActions}>
                     {isViewableFile(file.filename) && (
-                      <button className={styles.actionButton} onClick={() => previewFile(folderPath, file.filename, file.revision)} title="Visualizar arquivo">👁️</button>
+                      <button className={styles.actionButton} onClick={() => previewFile(folderPath, file.filename, file.revision)} title="View File">👁️</button>
                     )}
-                    <button className={styles.actionButton} onClick={() => handleFileDownload(folderPath, file.filename, router)} title="Baixar arquivo">📥</button>
-                    <button className={styles.actionButton} onClick={() => handleDeleteClick(file.filename)} title="Deletar arquivo">❌</button>
+                    <button className={styles.actionButton} onClick={() => handleFileDownload(folderPath, file.filename, router)} title="Download File">📥</button>
+                    <button className={styles.actionButton} onClick={() => handleDeleteClick(file.filename)} title="Delete File">❌</button>
                   </div>
                 </li>
               ))}
