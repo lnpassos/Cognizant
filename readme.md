@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a **document and folder management system** based on URLs. It allows users to create dynamic URLs to store and manage files securely. Only the user who created a file or folder can access and manage them, ensuring privacy through **JWT authentication** and robust security validations.
+This project is a **document and folder management system** based on URLs. It allows users to create dynamic URLs to store and manage files securely. Only the user who created a file or folder can access and manage them, ensuring privacy through **JWT authentication** and robust **security validations**.
 
 ### Example:
 A folder such as `documents/reviews` can store multiple files that can be accessed and managed at any time. When uploading a file with the same name, the system automatically assigns a version number to maintain a **file versioning system**.
