@@ -62,7 +62,7 @@ async def upload_file(
 
 
 # List files in a folder
-@router.get("/folders/{folder_path:path}/files/")
+@router.get("/folder/{folder_path:path}/files/")
 def get_files_in_folder(
     folder_path: str, db: Session = Depends(get_db), request: Request = None
 ):
@@ -100,7 +100,7 @@ def download_file(
 
 
 # Preview a file
-@router.get("/folders/{folder_path:path}/{filename}")
+@router.get("/folder/{folder_path:path}/{filename}")
 def preview_file(
     folder_path: str,
     filename: str,

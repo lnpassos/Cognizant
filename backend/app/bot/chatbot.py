@@ -30,7 +30,7 @@ class Chatbot:
                 "<b>How to use the project?</b><br>",
                 " To use the system, follow these steps:<br><br>"
                 "1️⃣ <b>** Authentication **</b><br>Create an account and log in to access the system.<br><br>To make your experience <b>faster</b> and <b>more dynamic</b>, the only validation we have is for <b>Email</b>. Consider using something like <b>yourname@gmail.com</b> as an example.<br><br>"
-                "2️⃣ <b>** System Access **</b><br> After logging in, you will be directed to <b>Home</b>, where you can create and manage your folders.<br><br>"
+                "2️⃣ <b>** System Access **</b><br> After logging in, you will be directed to <b>Folders</b>, where you can create and manage your folders.<br><br>"
                 "3️⃣ <b>** URL Creation **</b><br> Click on 'Insert a URL' and choose a name for your URL, such as: <b>'documents/reviews'</b>.<br><br> You can also optionally upload one or more files together by clicking on the <b>Cloud</b> icon. Finally, click on <b>'Send'</b>.<br><br>"
                 "4️⃣ <b>** Accessing Files **</b><br> After creating your URL, it will appear in the folders tab. <br><br>Click on the desired folder to <b>view the files.</b><br><br>"
                 "5️⃣ <b>** File Management **</b><br>"

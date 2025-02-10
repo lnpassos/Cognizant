@@ -26,7 +26,7 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      <Link href="/home" className={styles.logo}>
+      <Link href="/folders" className={styles.logo}>
         <img
           src="https://cognizant.scene7.com/is/content/cognizant/COG-Logo-2022-1?fmt=png-alpha"
           alt="Cognizant Logo"
@@ -34,8 +34,8 @@ export default function Header() {
         />
       </Link>
 
-      <Link href="/home" className={styles.title}>
-        Home
+      <Link href="/folders" className={styles.title}>
+        Folders
       </Link>
 
       <button onClick={handleLogout} className={styles.logoutButton}>

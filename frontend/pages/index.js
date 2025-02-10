@@ -19,7 +19,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       await loginUser(email, password);
-      router.push("/home");
+      router.push("/folders");
     } catch (error) {
       toast.error(error.message);
     } finally {

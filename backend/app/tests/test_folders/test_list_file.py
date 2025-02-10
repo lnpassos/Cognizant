@@ -46,7 +46,7 @@ def test_get_files_in_folder_success(
 
     # Simulate the request to list files in the folder
     response = client.get(
-        "/folders/test_folder/files/", cookies={"access_token": token}
+        "/folder/test_folder/files/", cookies={"access_token": token}
     )
 
     # Check the response
@@ -79,7 +79,7 @@ def test_get_files_in_folder_not_found(
 
     # Try to list files from a non-existent folder
     response = client.get(
-        "/folders/non_existent_folder/files/", cookies={"access_token": token}
+        "/folder/non_existent_folder/files/", cookies={"access_token": token}
     )
 
     assert response.status_code == 403
@@ -89,7 +89,7 @@ def test_get_files_in_folder_not_found(
 
 
 def test_get_files_in_folder_unauthenticated(client: TestClient):
-    response = client.get("/folders/test_folder/files/")
+    response = client.get("/folder/test_folder/files/")
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Token not found"

@@ -6,7 +6,6 @@ from app.db import get_db
 from app.schemas import users as schemas
 from app.services.users import register_user, get_user_by_email, verify_password
 from app.auth.jwt import AuthHandler
-from fastapi import Request
 
 
 router = APIRouter()
@@ -50,22 +49,6 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     )
 
     return response
-
-
-# Home protected
-@router.get("/home/")
-def protected_route(request: Request, db: Session = Depends(get_db)):
-    try:
-        email = auth_handler.get_current_user(request)  # Get user email from token
-        db_user = get_user_by_email(db, email=email)
-
-        if not db_user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        return {"message": f"Welcome, {db_user.username}!"}
-
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 
 # Logout

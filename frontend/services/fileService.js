@@ -11,7 +11,7 @@ export const fetchFiles = async (folderPath, router, setFiles, setLoading, setEr
   setError(null);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/folders/${encodePath(folderPath)}/files/`, {
+    const response = await fetch(`${API_BASE_URL}/folder/${encodePath(folderPath)}/files/`, {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -114,7 +114,7 @@ export const previewFile = (folderPath, fileName, revision, router) => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
   
     if (supportedFormats.includes(fileExtension)) {
-      const fileUrl = `${API_BASE_URL}/folders/${encodePath(folderPath)}/${encodeURIComponent(fileName)}?revision=${revision}`;
+      const fileUrl = `${API_BASE_URL}/folder/${encodePath(folderPath)}/${encodeURIComponent(fileName)}?revision=${revision}`;
   
       fetch(fileUrl, {
         method: "GET",

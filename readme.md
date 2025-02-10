@@ -106,14 +106,6 @@ Once both the backend and frontend are running, open your browser and navigate t
   - `message`: "Login successful"
   - Sets an `access_token` cookie with a 30-minute expiration time.
 
-### Protected Home Route
-**GET** `/home/`
-- **Description**: A protected route for you to manage your system.
-- **Request Headers**:
-  - `Cookie`: access_token (JWT authentication token)
-- **Response**:
-  - `message`: "Welcome, {username}!"
-
 ### Logout
 **POST** `/logout/`
 - **Description**: Logs out a user by deleting the authentication cookie.

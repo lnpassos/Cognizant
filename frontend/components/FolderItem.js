@@ -25,7 +25,7 @@ export default function FolderItem({ folder, onDelete }) {
 
   return (
     <div className={styles.folderItem} title={folder.path}>
-      <Link href={`/folders/${folder.path}`} className={styles.folderLink}>
+      <Link href={`/folder/${folder.path}`} className={styles.folderLink}>
         <FaFolder className={styles.folderIcon} />
         <span className={styles.folderName}>{folder.path}</span>
       </Link>
